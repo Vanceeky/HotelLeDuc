@@ -1,0 +1,561 @@
+<!--
+=========================================================
+* Material Kit 2 - v3.0.4
+=========================================================
+
+* Product Page:  https://www.creative-tim.com/product/material-kit 
+* Copyright 2023 Creative Tim (https://www.creative-tim.com)
+* Coded by www.creative-tim.com
+
+ =========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. -->
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="apple-touch-icon" sizes="76x76" href="/static/assets/img/apple-icon.png">
+  <link rel="icon" type="image/png" href="/static/assets/img/favicon.png">
+  <title>
+    Presidential Suite | Hotel Le Duc
+  </title>
+  <!--     Fonts and icons     -->
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" />
+  <!-- Nucleo Icons -->
+  <link href="/static/assets/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="/static/assets/css/nucleo-svg.css" rel="stylesheet" />
+  <!-- Font Awesome Icons -->
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <!-- CSS Files -->
+  <link id="pagestyle" href="/static/assets/css/material-kit.css?v=3.0.4" rel="stylesheet" />
+  <!-- Nepcha Analytics (nepcha.com) -->
+  <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
+
+  <!-- BS stepper -->
+
+  <link rel="stylesheet" href="/static/assets/css/bs-stepper.min.css">
+  <style>
+    body {
+        background: url(/static/assets/img/bg-pattern.png) repeat;
+    }
+
+    section {
+      background: url(/static/assets/img/bg-pattern.png) repeat;
+  }
+  </style>
+</head>
+
+<body class="blog-author bg-gray-200">
+  <!-- Navbar Transparent -->
+    {% include 'home/layout/nav.html'%}
+  <!-- End Navbar -->
+  <!-- -------- START HEADER 4 w/ search book a ticket form ------- -->
+  <header>
+    <div class="page-header min-height-400" style="background-image: url('/static/assets/img/city-profile.jpg');" loading="lazy">
+      <span class="mask bg-gradient-dark opacity-8"></span>
+    </div>
+  </header>
+  <!-- -------- END HEADER 4 w/ search book a ticket form ------- -->
+  <div class="card card-body shadow-blur mx-3 mx-md-4 mt-n6 mb-4">
+    <!-- START Testimonials w/ user image & text & info -->
+    <section class="py-sm-7 py-5 position-relative">
+      <div class="container">
+        <div class="row">
+          <div class="col-12 mx-auto">
+            <div class="mt-n8 mt-md-n9 text-center">
+              <img class="avatar avatar-xxl shadow-xl position-relative z-index-2" src="/static/assets/img/logo.png" alt="bruce" loading="lazy">
+            </div>
+            <div class="row py-5">
+              <div class="col-lg-7 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mx-auto">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <h3 class="mb-0">{{ room_details.name }}</h3>
+                  <div class="d-block">
+                    <button type="button" class="btn btn-sm btn-outline-info text-nowrap mb-0">Reservation</button>
+                  </div>
+                </div>
+                <div class="row mb-4">
+                  <div class="col-auto">
+                    <span class="h6">₱ {{ room_details.room_rate }}</span>
+                    <span>/ Night</span>
+                  </div>
+
+                </div>
+                <p class="text-lg mb-0">
+                  {{ room_details.description }}<br><a href="javascript:;" class="text-info icon-move-right">More
+                    <i class="fas fa-arrow-right text-sm ms-1"></i>
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- END Testimonials w/ user image & text & info -->
+    <!-- START Blogs w/ 4 cards w/ image & text & link -->
+
+    <section class="py-3" id="room">
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <div class="card box-shadow-xl overflow-hidden mb-5">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="card card-default">
+                    <div class="card-header">
+                      <h3 class="card-title">Room Availability</h3>
+                      <p>Please refer to the calendar below to check availability before making a reservation.</p>
+                    </div>
+                    <div class="card-body p-0">
+                      <div class="bs-stepper linear">
+                        <div class="bs-stepper-header" role="tablist">
+                          <div class="step active" data-target="#logins-part">
+                            <button type="button" class="step-trigger" role="tab" aria-controls="logins-part" id="logins-part-trigger" aria-selected="true">
+                            <span class="bs-stepper-circle">1</span>
+                            <span class="bs-stepper-label">Reservation</span>
+                            </button>
+                          </div>
+                          <div class="line"></div>
+                          <div class="step" data-target="#information-part">
+                            <button type="button" class="step-trigger" role="tab" aria-controls="information-part" id="information-part-trigger" aria-selected="false" disabled="disabled">
+                            <span class="bs-stepper-circle">2</span>
+                            <span class="bs-stepper-label">Final Booking</span>
+                            </button>
+                          </div>
+                        </div>
+                        <div class="bs-stepper-content">
+                          <div id="logins-part" class="content active dstepper-block" role="tabpanel" aria-labelledby="logins-part-trigger">
+  
+                              <div class="row">
+                                <div class="col-md-7">
+                      
+                                  <div id="calendar"></div>
+              
+
+                                </div>
+  
+                                <div class="col-md-5">
+                                  <div class="card card-plain">
+                                    <div class="card-header pb-0 text-left">
+                                      <h3 class="font-weight-bolder text-info text-gradient">Welcome back</h3>
+                                      <p class="mb-0">Enter your email and password to sign in</p>
+                                    </div>
+                                    <div class="card-body">
+                                      <form role="form text-left">
+                                        <div class="row">
+                                          <div class="col-md-6">
+                                            <div class="input-group input-group-static my-3">
+                                              <label>Check in:</label>
+                                              <input type="date" id="checkIn" class="form-control">
+                                            </div>
+                                          </div>
+  
+                                          <div class="col-md-6">
+                                            <div class="input-group input-group-static my-3">
+                                              <label>Check out:</label>
+                                              <input type="date" id="checkOut" class="form-control">
+                                            </div>
+                                          </div>
+  
+                                          <div class="col-md-6">
+                                            <div class="input-group input-group-outline my-3">
+                                              <label class="form-label">Firstname</label>
+                                              <input type="text" class="form-control">
+                                            </div>
+                                          </div>
+  
+                                          <div class="col-md-6">
+                                            <div class="input-group input-group-outline my-3">
+                                              <label class="form-label">Lastname</label>
+                                              <input type="text" class="form-control">
+                                            </div>
+                                          </div>
+  
+                                          <div class="col-md-5">
+                                            <div class="input-group input-group-outline my-3">
+                                              <label class="form-label">Contact number</label>
+                                              <input type="phone" class="form-control">
+                                            </div>
+                                          </div>                                        
+                                          <div class="col-md-7">
+                                            <div class="input-group input-group-outline my-3">
+                                              <label class="form-label">Email</label>
+                                              <input type="email" class="form-control">
+                                            </div>
+                                          </div>
+  
+                                          <div class="col-md-12">
+                                            <div class="input-group input-group-outline my-3">
+                                              <label class="form-label">Address</label>
+                                              <input type="text" class="form-control">
+                                            </div>
+                                          </div>
+  
+  
+                                        </div>
+  
+  
+                                        <div class="form-check form-switch">
+                                          <input class="form-check-input" type="checkbox" id="rememberMe">
+                                          <label class="form-check-label" for="rememberMe">I agee that the <span>information I provided is correct</span></label>
+                                        </div>
+                                        <div class="text-center">
+                                          <button type="button" class="btn btn-round bg-gradient-info btn-lg w-100 mt-4 mb-0" onclick="stepper.next()">Next</button>
+                                        </div>
+                                      </form>
+                                    </div>
+                                    <div class="card-footer text-center pt-0 px-lg-2 px-1">
+                                      <p class="mb-4 text-sm mx-auto">
+                                        Don't have an account?
+                                        
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+  
+  
+                              </div>
+                          </div>
+  
+  
+                          <div id="information-part" class="content" role="tabpanel" aria-labelledby="information-part-trigger">
+                            <div class="row">
+                              <div class="col-md-4 mt-4">
+                                <div class="card">
+                                  <div class="card-header pb-0 px-3">
+                                    <h6 class="mb-0">Your booking details:</h6>
+                                  </div>
+                                  <div class="card-body pt-4 p-3">
+                                    <ul class="list-group">
+                                      <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
+                                        <div class="d-flex flex-column">
+                                          {% comment %} <h6 class="mb-3 text-sm">Oliver Liam</h6> {% endcomment %}
+                                          <span class="mb-2 text-xs">Check in: <span class="text-dark font-weight-bold ms-sm-2">March 23, 2024 ( Saturday )</span></span>
+                                          <span class="mb-2 text-xs">Check out: <span class="text-dark ms-sm-2 font-weight-bold">March 23, 2024 ( Saturday )</span></span>
+                                          <span class="text-xs">Total length of stay: <span class="text-dark ms-sm-2 font-weight-bold">1 night</span></span>
+                                        </div>
+  
+                                      </li>
+                                      <li class="list-group-item border-0 d-flex p-4 mb-2 mt-3 bg-gray-100 border-radius-lg">
+                                        <div class="d-flex flex-column">
+                                          <h6 class="mb-3 text-sm">Price Summary: </h6>
+                                          <span class="mb-2 text-xs">Price: <span class="text-dark font-weight-bold ms-sm-2">₱ 3500</span></span>
+  
+                                        </div>
+  
+                                      </li>
+  
+                                    </ul>
+                                  </div>
+                                </div>
+                                <button class="btn btn-info m-3" onclick="stepper.previous()">Previous</button>
+                              </div>
+                              
+                              <div class="col-md-8 mt-4">
+
+                                <div class="row">
+                                  <div class="col-md-12">
+                                    <div class="card h-100 mb-4">
+                                      <div class="card-header pb-0 px-3">
+                                        <div class="row">
+                                          <div class="col-lg-12 col-12">
+                                            <div class="card card-profile">
+                                              <div class="row">
+                                                <div class="col-lg-4 col-md-6 col-12">
+                                                  <a href="javascript:;">
+                                                    <div class="p-3 pe-md-0">
+                                                      <img class="w-100 border-radius-md shadow-lg" src="/static/assets/img/pres_suite.jpg" alt="image">
+                                                    </div>
+                                                  </a>
+                                                </div>
+                                                <div class="col-lg-8 col-md-6 col-12 my-auto">
+                                                  <div class="card-body ps-lg-0">
+                                                    <h5 class="mb-0"><a href="">Presidential Suite</a></h5>
+                                                    <h6 class="text-info">₱2500 / night</h6>
+                                                    <p class="mb-0"> Our Presidential Room features a king-sized bed, sofa, bathroom, balcony, hygiene kit, colored TV and mini ref. Ideal for big groups or VIPs who wishes to relax.</p>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+      
+                                        </div>
+                                      </div>
+
+                                     
+                                        <div class="card-body pb-0 px-3">
+                                          <div class="row">
+                                            <div class="col-lg-12 col-12">
+                                              <div class="card-profile">
+                                                <div class="row">
+   
+                                                  <div class="col-lg-8 col-md-6 col-12 my-auto">
+                                                    <div class="card-body ps-lg-0 m-3">
+                                                      <h5 class="mb-0"><a href="">Secure your stay with GCASH</a></h5>
+                                                      
+                                                      <p class="mb-0"> To confirm your reservation, a down payment of 1250 is required. This represents 50% of the room rate. We conviently accept payments through GCash. After sending your paymeny, please upload a clear photo of your Gcash receipt for verification. Once your payment is confirmed, you'll receive a final booking confirmation email. </p>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                      <label for="example-text-input" class="form-control-label">Upload Gcash receipt</label>
+                                                      <input class="form-control" type="file" value="John Snow" id="example-text-input">
+                                                  </div>
+                                                  </div>
+  
+                                                  <div class="col-lg-4 col-md-6 col-12">
+                                                    <a href="javascript:;">
+                                                      <div class="p-3 pe-md-0">
+                                                        <img class="w-100 border-radius-md shadow-lg" src="/static/assets/img/gcash.png" alt="image">
+                                                      </div>
+                                                    </a>
+                                                  </div>
+
+                                                  <button type="submit" class="btn btn-dark mt-3 m-3"><i class="fas fa-lock text-sm mx-2" aria-hidden="true"></i>Complete booking</button>
+                                                </div>
+                                              </div>
+                                            </div>
+        
+                                          </div>
+                                        </div>
+      
+                                    
+    
+                                    </div>
+
+
+                                  </div>
+
+
+
+                                </div>
+
+                                
+                              </div>
+                            </div>
+                            
+                            
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-footer">
+                      Hotel Le Duc | The Newest Business Hotel in Pangasinan
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- END Blogs w/ 4 cards w/ image & text & link -->
+  </div>
+  <section class="py-3">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6">
+          <h3 class="mb-5">Rooms and Amenities</h3>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-3 col-sm-6">
+          <div class="card card-plain">
+            <div class="card-header p-0 position-relative">
+              <a class="d-block blur-shadow-image">
+                <img src="/static/assets/img/examples/testimonial-6-2.jpg" alt="img-blur-shadow" class="img-fluid shadow border-radius-lg" loading="lazy">
+              </a>
+            </div>
+            <div class="card-body px-0">
+              <h5>
+                <a href="javascript:;" class="text-dark font-weight-bold">Rover raised $65 million</a>
+              </h5>
+              <p>
+                Finding temporary housing for your dog should be as easy as
+                renting an Airbnb. That’s the idea behind Rover ...
+              </p>
+              <a href="javascript:;" class="text-info text-sm icon-move-right">Read More
+                <i class="fas fa-arrow-right text-xs ms-1"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+          <div class="card card-plain">
+            <div class="card-header p-0 position-relative">
+              <a class="d-block blur-shadow-image">
+                <img src="/static/assets/img/examples/testimonial-6-3.jpg" alt="img-blur-shadow" class="img-fluid shadow border-radius-lg" loading="lazy">
+              </a>
+            </div>
+            <div class="card-body px-0">
+              <h5>
+                <a href="javascript:;" class="text-dark font-weight-bold">MateLabs machine learning</a>
+              </h5>
+              <p>
+                If you’ve ever wanted to train a machine learning model
+                and integrate it with IFTTT, you now can with ...
+              </p>
+              <a href="javascript:;" class="text-info text-sm icon-move-right">Read More
+                <i class="fas fa-arrow-right text-xs ms-1"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+          <div class="card card-plain">
+            <div class="card-header p-0 position-relative">
+              <a class="d-block blur-shadow-image">
+                <img src="/static/assets/img/examples/blog-9-4.jpg" alt="img-blur-shadow" class="img-fluid shadow border-radius-lg" loading="lazy">
+              </a>
+            </div>
+            <div class="card-body px-0">
+              <h5>
+                <a href="javascript:;" class="text-dark font-weight-bold">MateLabs machine learning</a>
+              </h5>
+              <p>
+                If you’ve ever wanted to train a machine learning model
+                and integrate it with IFTTT, you now can with ...
+              </p>
+              <a href="javascript:;" class="text-info text-sm icon-move-right">Read More
+                <i class="fas fa-arrow-right text-xs ms-1"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-12 col-12">
+          <div class="card card-blog card-background cursor-pointer">
+            <div class="full-background" style="background-image: url('/static/assets/img/logo.png')" loading="lazy"></div>
+            <div class="card-body">
+              <div class="content-left text-start my-auto py-4">
+                <h2 class="card-title text-white">Flexible work hours</h2>
+                <p class="card-description text-white">Rather than worrying about switching offices every couple years, you stay in the same place.</p>
+                <a href="javascript:;" class="text-white text-sm icon-move-right">Read More
+                  <i class="fas fa-arrow-right text-xs ms-1"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- -------- START FOOTER 5 w/ DARK BACKGROUND ------- -->
+  {% include 'home/layout/footer.html' %}
+  <!-- -------- END FOOTER 5 w/ DARK BACKGROUND ------- -->
+  <!--   Core JS Files   -->
+   {% include 'home/layout/scripts.html' %}
+{% comment %} 
+   <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script> {% endcomment %}
+
+{% comment %}  <script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var calendarEl = document.getElementById('calendar');
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth'
+      });
+      calendar.render();
+    });
+
+    
+  </script>
+ {% endcomment %}
+
+ <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+
+ <script>
+   var room_slug = "{{ room_details.slug }}";  // Access room_slug from context
+
+   var calendarEl = document.getElementById('calendar');
+ 
+   document.addEventListener('DOMContentLoaded', function() {
+     var calendar = new FullCalendar.Calendar(calendarEl, {
+       initialView: 'dayGridMonth',
+       events: function(fetchInfo, successCallback) {
+        fetch(`/get_room_reservations/${room_slug}/`)
+           .then(response => response.json())
+           .then(reservations => successCallback(reservations))
+           .catch(error => console.error(error));
+       },
+       // Customize event rendering with colors
+       eventDidMount: function(info) {
+         if (info.event.title === "Reserved") {
+           info.el.style.backgroundColor = 'red';
+         } else {
+           info.el.style.backgroundColor = 'green';
+         }
+       }
+     });
+ 
+     calendar.render();
+   });
+ </script>
+
+
+  
+
+
+
+  <script src="/static/assets/js/plugins/bs-stepper.min.js"></script>
+  // BS-Stepper Ini
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      window.stepper = new Stepper(document.querySelector('.bs-stepper'))
+    })
+  
+  </script>
+
+  <script>
+    const nextButton = document.querySelector('.btn-round.bg-gradient-info'); // Select the "Next" button
+    const inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="phone"]'); // Select all text, email, and phone inputs
+    const checkbox = document.getElementById('rememberMe'); // Select the checkbox
+    
+    function checkForEmptyInputs() {
+      // Check if any input is empty
+      for (const input of inputs) {
+        if (input.value.trim() === '') {
+          return true; // If any input is empty, return true (disable button)
+        }
+      }
+      // Check if checkbox is checked
+      return !checkbox.checked; // If checkbox is not checked, return true (disable button)
+    }
+    
+    // Disable the button initially (optional)
+    nextButton.disabled = true;
+    
+    // Add event listener to any input change
+    inputs.forEach(input => input.addEventListener('change', () => {
+      nextButton.disabled = checkForEmptyInputs();
+    }));
+    
+    // Add event listener to checkbox change
+    checkbox.addEventListener('change', () => {
+      nextButton.disabled = checkForEmptyInputs();
+    });
+    
+
+  </script>
+
+  <script>
+    const today = new Date();
+    const checkIn = document.getElementById('checkIn');
+    const checkOut = document.getElementById('checkOut');
+  
+    function disablePastDates(element) {
+      element.min = today.toISOString().split('T')[0];
+    }
+  
+    disablePastDates(checkIn);
+    disablePastDates(checkOut);
+  </script>
+
+
+</body>
+
+</html>
