@@ -37,7 +37,7 @@ class Room(models.Model):
     Model to represent individual hotel rooms.
     """
     room_number = models.CharField(max_length=10, unique=True)
-    room_type = models.ForeignKey(RoomType, on_delete=models.PROTECT)
+    room_type = models.ForeignKey(RoomType, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, blank=True)  # Optional room name (e.g., "Honeymoon Suite")
     description = models.TextField(blank=True)
 
@@ -45,7 +45,7 @@ class Room(models.Model):
     # Additional fields:
     max_occupancy = models.PositiveIntegerField(blank=True, null=True)  # Non-negative integer
     amenities = models.ManyToManyField('Amenity', blank=True)  # Relationship with Amenities model
-    images = models.ImageField(upload_to='room_images/', blank=True)  # Upload images to a directory
+
     # **New status field with choices**
     STATUS_CHOICES = (
         ('available', 'Available'),
@@ -124,17 +124,17 @@ class Booking(models.Model):
     """
     guest = models.ForeignKey(Guest, on_delete=models.CASCADE)
 
-    # Room reservation (optional)
+    # Room reservation
     room = models.ForeignKey(Room, on_delete=models.CASCADE, blank=True, null=True)
-    check_in = models.DateField(blank=True, null=True)  # Optional check-in date for room reservation
-    check_out = models.DateField(blank=True, null=True)  # Optional check-out date for room reservation
+    check_in = models.DateField(blank=True, null=True) 
+    check_out = models.DateField(blank=True, null=True) 
 
-    # Order details (optional)
+   
     order = models.OneToOneField(
         'restaurant.Order', on_delete = models.CASCADE, blank=True, null=True, related_name="orders"
-    )  # One-to-One relationship with Order model (optional)
+    )  
 
-    # Booking status (e.g., pending, confirmed, cancelled)
+    
     STATUS_CHOICES = (
         ('checked-in', 'Checked In'),
         ('checked-out', 'Checked Out'),
@@ -142,7 +142,9 @@ class Booking(models.Model):
 
     status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='checked-in')
 
-    # Additional fields for booking specifics (optional)
+    amount_to_pay = models.DecimalField(max_digits=10, decimal_places=2, default="0.00") #total amount including additional orders
+    amount_paid = models.DecimalField(max_digits=10, decimal_places=2, default="0.00") #amount paid by guest
+
     special_requests = models.TextField(blank=True)  # Guest's special requests
 
     class Meta:

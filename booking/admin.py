@@ -36,20 +36,20 @@ class ReservationAdmin(admin.ModelAdmin):
         obj.calculate_down_payment()  # Call the method from the model
 
     
-    actions = [calculate_total_amount, calculate_down_payment]  # Add custom actions
+    actions = [calculate_total_amount, calculate_down_payment]  
 
 class GuestAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'phone_number')  # Fields to display in the admin list
+    list_display = ('name', 'email', 'phone_number')
     search_fields = ('name', 'email')  # Allow searching by name and email
 
 admin.site.register(Guest, GuestAdmin)
 
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):
-    list_display = ('guest', 'room', 'check_in', 'check_out', 'has_order', 'status', 'special_requests')
-    # ... other admin settings
+    list_display = ('guest', 'room', 'check_in', 'check_out', 'has_order', 'status', 'amount_to_pay', 'amount_paid', 'special_requests')
 
-    # Corrected approach for custom display
+
+ 
     def has_order(self, obj):
         return bool(obj.order)
     has_order.short_description = 'Has Order'
@@ -57,4 +57,4 @@ class BookingAdmin(admin.ModelAdmin):
     def has_order_display(self, obj):
         return self.has_order(obj)  # Pass obj to the method
 
-    has_order_display.admin_order_field = 'order'  # Optional: Set field for sorting
+    has_order_display.admin_order_field = 'order'

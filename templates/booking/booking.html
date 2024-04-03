@@ -3,7 +3,7 @@
 {% block title %} Booking {% endblock %}
 
 {% block stylesheet %}
-
+<link rel="stylesheet" href="/static/assets/css/bs-stepper.min.css">
 <style>
 
     .dt-length{
@@ -49,7 +49,7 @@
                         <h6 class="mb-0">Booking Information</h6>
                       </div>
                       <div class="col-6 text-end">
-                        <a class="btn bg-gradient-info mb-0" href="javascript:;"><i class="fas fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Add New Booking</a>
+                        <a class="btn bg-gradient-info mb-0" data-bs-toggle="modal" data-bs-target="#modal-form"><i class="fas fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Add New Booking</a>
                       </div>
                     </div>
                   </div>
@@ -203,11 +203,254 @@
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="col-md-4">
+      <div class="modal fade" id="modal-form" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-body p-0">
+              <div class="card card-plain">
+                <div class="card-header pb-0 text-left">
+                  <h3 class="font-weight-bolder text-info text-gradient">Add new Guest</h3>
+                  <p class="mb-0"></p>
+                </div>
+                <div class="card-body">
+
+                  <div class="bs-stepper linear">
+                    <div class="bs-stepper-header" role="tablist">
+                      <div class="step active" data-target="#logins-part">
+                        <button type="button" class="step-trigger" role="tab" aria-controls="logins-part" id="logins-part-trigger" aria-selected="true">
+                        <span class="bs-stepper-circle">1</span>
+                        <span class="bs-stepper-label">Guest</span>
+                        </button>
+                      </div>
+                      <div class="line"></div>
+                      <div class="step" data-target="#information-part">
+                        <button type="button" class="step-trigger" role="tab" aria-controls="information-part" id="information-part-trigger" aria-selected="false" disabled="disabled">
+                        <span class="bs-stepper-circle">2</span>
+                        <span class="bs-stepper-label">Booking Information</span>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="bs-stepper-content">
+                      <div id="logins-part" class="content active dstepper-block" role="tabpanel" aria-labelledby="logins-part-trigger">
+
+                        <form role="form text-left">
+                          {% csrf_token %}
+                          <div class="row">
+    
+      
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label for="example-text-input" class="form-control-label">Firstname:</label>
+                                <input class="form-control" type="text" value="" id="example-text-input" placeholder="Ivan">
+                              </div>
+                            </div>
+      
+      
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label for="example-text-input" class="form-control-label">Lastname:</label>
+                                <input class="form-control" type="text" value="" id="example-text-input" placeholder="James">
+                              </div>
+                            </div>
+
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label for="example-text-input" class="form-control-label">Contact Number:</label>
+                                <input class="form-control" type="phone" value="" id="example-text-input" placeholder="09456656707">
+                              </div>
+                            </div>
+      
+      
+                            <div class="col-md-8">
+                              <div class="form-group">
+                                <label for="example-text-input" class="form-control-label">Email</label>
+                                <input class="form-control" type="email" value="" id="example-text-input" placeholder="james.ivan@email.com">
+                              </div>
+                            </div>
+
+                            <div class="form-group">
+                              <label for="exampleFormControlTextarea1">Address</label>
+                              <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                            </div>
+                            
+                          </div>
+      
+                        </form>
+
+                        <button type="button" class="btn btn-round bg-gradient-info btn-md w-100 mt-4 mb-0" onclick="stepper.next()">Next</button>
+
+
+                      </div>
+
+
+                      <div id="information-part" class="content" role="tabpanel" aria-labelledby="information-part-trigger">
+
+
+                        
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="roomTypeSelect">Room Type:</label>
+                                <select class="form-control" id="roomTypeSelect">
+                                    <option value="">-- Select Room Type --</option>  </select>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                              <div class="form-group">
+                                  <label for="availableRoomsList">Available Rooms:</label>
+                                  <select class="form-control" id="availableRoomsList" disabled>
+                                      <option>-- Select Room Type First --</option>  </select>
+                              </div>
+                          </div>
+    
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label for="example-datetime-local-input" class="form-control-label">Check In</label>
+                              <input class="form-control" type="datetime-local" value="" id="check_in">
+                            </div>
+                          </div>
+    
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label for="example-datetime-local-input" class="form-control-label">Check Out</label>
+                              <input class="form-control" type="datetime-local" value="" id="check_out">
+                            </div>
+                          </div>
+    
+    
+                          <div class="col-md-4">
+                            <div class="form-group">
+                              <label for="example-text-input" class="form-control-label">Length of stay</label>
+                              <input class="form-control" type="text" value="" id="length_of_stay" disabled>
+                            </div>
+                          </div>
+    
+    
+                          <div class="col-md-4">
+                            <div class="form-group">
+                              <label for="example-text-input" class="form-control-label">Amount to pay: </label>
+                              <div class="input-group">
+                                <span class="input-group-text">₱</span>
+                                <input type="number" class="form-control" aria-label="Amount (to the nearest dollar)" id="amount_to_pay" disabled>
+                                <span class="input-group-text">.00</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="col-md-4">
+                            <div class="form-group">
+                              <label for="example-text-input" class="form-control-label">Amount paid: </label>
+                              <div class="input-group">
+                                <span class="input-group-text">₱</span>
+                                <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+                               
+                                <span class="input-group-text">.00</span>
+                              </div>
+                            </div>
+                          </div>
+                          
+                        </div>
+                        
+                        <hr class="dark horizontal">
+                        <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-outline-primary btn-md  mb-0 " onclick="stepper.previous()">Previous</button>
+                        
+                        <button type="button" class="btn bg-gradient-success btn-md  mb-0" onclick="stepper.previous()">Add booking</button>
+                        </div>
+                      
+                      </div>
+                    </div>
+                  </div>
+                  
+
+                  <!--
+                  <form role="form text-left">
+                    <div class="row">
+                      <div class="col-md-8">
+                        <div class="form-group">
+                          <label for="exampleFormControlSelect1">Room Type:</label>
+                          <select class="form-control" id="exampleFormControlSelect1">
+                            <option>Presidential Suite - 3500 per night</option>
+                            <option>2</option>
+                          </select>
+                        </div>
+                      
+                      </div>
+
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label for="exampleFormControlSelect1">Room Number:</label>
+                          <select class="form-control" id="exampleFormControlSelect1">
+                            <option>1</option>
+                            <option>2</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="example-datetime-local-input" class="form-control-label">Check In</label>
+                          <input class="form-control" type="datetime-local" value="" id="example-datetime-local-input">
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="example-datetime-local-input" class="form-control-label">Check Out</label>
+                          <input class="form-control" type="datetime-local" value="" id="example-datetime-local-input">
+                        </div>
+                      </div>
+
+
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="example-text-input" class="form-control-label">Text</label>
+                          <input class="form-control" type="text" value="John Snow" id="example-text-input">
+                        </div>
+                      </div>
+
+
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="example-text-input" class="form-control-label">Text</label>
+                          <input class="form-control" type="text" value="John Snow" id="example-text-input">
+                        </div>
+                      </div>
+                      
+                    </div>
+
+
+                    <div class="text-center">
+                      <button type="button" class="btn btn-round bg-gradient-info btn-lg w-100 mt-4 mb-0">Sign in</button>
+                    </div>
+                  </form>
+                  -->
+
+                </div>
+
+                <!--
+                <div class="card-footer text-center pt-0 px-lg-2 px-1">
+                  <p class="mb-4 text-sm mx-auto">
+                    Don't have an account?
+                    <a href="javascript:;" class="text-info text-gradient font-weight-bold">Sign up</a>
+                  </p>
+                </div>
+                -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 {% endblock %}
+
+
 
 {% block javascripts %}
 
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
 
 <script>
@@ -219,5 +462,217 @@
     searchInput.placeholder = "Search...";
 
 </script>
+
+<script src="/static/assets/js/plugins/bs-stepper.min.js"></script>
+// BS-Stepper Ini
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.stepper = new Stepper(document.querySelector('.bs-stepper'))
+  })
+
+</script>
+
+
+{% comment %} <script>
+  $(document).ready(function() {
+    // Fetch room types on page load
+    fetchRoomTypes();
+  
+    $('#roomTypeSelect').change(function() {
+      const roomTypeId = $(this).val();
+      if (roomTypeId) {
+        fetchAvailableRooms(roomTypeId);
+      } else {
+        $('#availableRoomsList').empty().prop('disabled', true);
+        clearLengthOfStayAmount(); // Clear previous values when room type changes
+      }
+    });
+  
+    function fetchRoomTypes() {
+      $.ajax({
+        url: '/frontdesk/api/room-types/', // Replace with your actual API endpoint URL
+        dataType: 'json',
+        success: function(data) {
+          const roomTypeSelect = $('#roomTypeSelect');
+          roomTypeSelect.empty(); // Clear existing options
+          roomTypeSelect.append($('<option value="">-- Select Room Type --</option>'));
+          data.forEach(function(roomType) {
+            roomTypeSelect.append($('<option value="' + roomType.id + '"  data-rate-per-night=" ' + roomType.rate_per_night + ' ">' + roomType.name + ' - ₱' + roomType.rate_per_night + '/night</option>'));
+            
+          });
+          
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          console.error('Error fetching room types:', textStatus, errorThrown);
+        }
+      });
+    }
+  
+    function fetchAvailableRooms(roomTypeId) {
+      $.ajax({
+        url: '/frontdesk/api/available-rooms/' + roomTypeId + '/', // Replace with your actual API endpoint URL with room type ID
+        dataType: 'json',
+        success: function(data) {
+          const availableRoomsList = $('#availableRoomsList');
+          availableRoomsList.empty();
+          if (data.length > 0) {
+            data.forEach(function(room) {
+              availableRoomsList.append($('<option value="' + room.id + '">' + "Room #" + room.room_number + ' - ' + room.name + '</option>'));
+            });
+          } else {
+            availableRoomsList.append($('<option>-- No Available Rooms --</option>'));
+          }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          console.error('Error fetching available rooms:', textStatus, errorThrown);
+        }
+      });
+    }
+
+
+    
+    // Enable checkout field only after check-in is selected
+    $("#check_in").change(function() {
+      $("#check_out").prop("disabled", false);
+    });
+
+    // Calculate length of stay on checkout change
+    $("#check_out").change(function() {
+      var checkIn = new Date($("#check_in").val());
+      var checkOut = new Date($("#check_out").val());
+
+      // Check if checkout date is after check-in date
+      if (checkOut > checkIn) {
+        // Calculate difference in milliseconds
+        var diffInMs = Math.abs(checkOut - checkIn);
+
+        // Convert milliseconds to days, rounding down
+        var lengthOfStay = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+        // Update length of stay field
+        $("#length_of_stay").val(lengthOfStay + " night(s)");
+      } else {
+        alert("Checkout date must be after check-in date.");
+        $("#check_out").val(""); // Clear checkout field if invalid
+      }
+    });
+
+
+})
+
+
+</script> {% endcomment %}
+
+<script>
+
+  $(document).ready(function() {
+    // Fetch room types on page load
+    fetchRoomTypes();
+  
+    $('#roomTypeSelect').change(function() {
+      const roomTypeId = $(this).val();
+      if (roomTypeId) {
+        fetchAvailableRooms(roomTypeId);
+        console.log(roomTypeId)
+      } else {
+        $('#availableRoomsList').empty().prop('disabled', true);
+        clearLengthOfStayAmount(); // Clear previous values when room type changes
+      }
+    });
+  
+    function fetchRoomTypes() {
+      $.ajax({
+        url: '/frontdesk/api/room-types/', // Replace with your actual API endpoint URL
+        dataType: 'json',
+        success: function(data) {
+          const roomTypeSelect = $('#roomTypeSelect');
+          roomTypeSelect.empty(); // Clear existing options
+          roomTypeSelect.append($('<option value="">-- Select Room Type --</option>'));
+          data.forEach(function(roomType) {
+            const roomRate = roomType.rate_per_night; // Adjust property name if different
+        // Create hidden input field for room rate
+            const hiddenRateInput = $('<input type="hidden" id="roomRate_' + roomType.id + '" value="' + roomRate + '">');
+            
+            roomTypeSelect.append($('<option value="' + roomType.id + '" data-rate-per-night=" ' + roomType.rate_per_night + ' ">' + roomType.name + ' - ₱' + roomRate + '/night</option>').append(hiddenRateInput));
+          });
+
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          console.error('Error fetching room types:', textStatus, errorThrown);
+        }
+      });
+    }
+  
+    function fetchAvailableRooms(roomTypeId) {
+      $.ajax({
+        url: '/frontdesk/api/available-rooms/' + roomTypeId + '/', // Replace with your actual API endpoint URL with room type ID
+        dataType: 'json',
+        success: function(data) {
+          const availableRoomsList = $('#availableRoomsList');
+          availableRoomsList.empty();
+          if (data.length > 0) {
+            data.forEach(function(room) {
+              availableRoomsList.append($('<option value="' + room.id + '">' + "Room #" + room.room_number + ' - ' + room.name + '</option>'));
+            });
+          } else {
+            availableRoomsList.append($('<option>-- No Available Rooms --</option>'));
+          }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          console.error('Error fetching available rooms:', textStatus, errorThrown);
+        }
+      });
+    }
+  
+  
+    // Enable checkout field only after check-in is selected
+    $("#check_in").change(function() {
+      $("#check_out").prop("disabled", false);
+    });
+  
+    // Calculate length of stay and amount to pay on checkout change
+    $("#check_out").change(function() {
+      var checkIn = new Date($("#check_in").val());
+      var checkOut = new Date($("#check_out").val());
+  
+      // Check if checkout date is after check-in date
+      if (checkOut > checkIn) {
+        // Calculate difference in milliseconds
+        var diffInMs = Math.abs(checkOut - checkIn);
+  
+        // Convert milliseconds to days, rounding down
+        var lengthOfStay = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+  
+        // Update length of stay field
+        $("#length_of_stay").val(lengthOfStay + " night(s)");
+  
+        // Get rate per night from selected room option
+        const selectedRoomId = $("#availableRoomsList").val();
+  
+        const selectedRoomOption = $("#availableRoomsList").find(`option[value="${selectedRoomId}"]`);
+        const selectedRoomRate = $(`#roomRate_${selectedRoomId}`).val();
+        console.log("Selected Room Rate:", selectedRoomRate);
+        //const ratePerNight = parseFloat(selectedRoomOption.data('rate-per-night'));
+        
+
+        // Calculate total amount
+        const totalAmount = selectedRoomRate * lengthOfStay;
+        console.log(totalAmount)
+  
+        // Update amount to pay field with formatted value
+        $("#amount_to_pay").val(totalAmount.toFixed(2));
+      } else {
+        alert("Checkout date must be after check-in date.");
+        $("#check_out").val(""); // Clear checkout field if invalid
+        $("#length_of_stay").val(""); // Clear length of stay
+        $("#amount_to_pay").val(""); // Clear amount to pay
+      }
+    });
+  
+
+  });
+</script>
+
 
 {% endblock %}
