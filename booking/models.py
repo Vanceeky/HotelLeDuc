@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.core.validators import MinValueValidator
 
 
 # Create your models here.
@@ -68,7 +68,8 @@ class Guest(models.Model):
     """
     Model to represent hotel guests.
     """
-    name = models.CharField(max_length=255)
+    firstname = models.CharField(max_length=255, null = True, blank = True)
+    lastname = models.CharField(max_length=255, null = True, blank = True)
     email = models.EmailField()
     phone_number = models.CharField(max_length=15, blank=True)
     address = models.TextField(blank=True)
@@ -78,11 +79,12 @@ class Guest(models.Model):
         verbose_name_plural = "Guests"
 
     def __str__(self):
-        return self.name
+        return f"{self.firstname} {self.lastname}"
 
 
 class Reservation(models.Model):
-    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    room_type = models.ForeignKey(RoomType, on_delete=models.CASCADE, null = True, blank = True)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, null = True, blank = True)
     guest = models.ForeignKey(Guest, on_delete=models.CASCADE, null=True, blank=True)
     check_in = models.DateField()
     check_out = models.DateField()
@@ -99,18 +101,18 @@ class Reservation(models.Model):
     )
 
     status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='pending')
-
+    date_created = models.DateTimeField(auto_now_add=True, null = True, blank=True)
     class Meta:
         verbose_name = "Reservation"
         verbose_name_plural = "Reservations"
 
     def __str__(self):
-        return f"{self.guest} - {self.room.room_number} ({self.check_in} - {self.check_out})"
+        return f"{self.guest} - {self.room} ({self.check_in} - {self.check_out})"
 
     def calculate_total_amount(self):
         # Calculate the total amount based on room rate and number of days
-        num_days = (self.check_out - self.check_in).days + 1  # Include both check-in and check-out days
-        self.total_amount = num_days * self.room.room_type.rate_per_night
+        num_days = (self.check_out - self.check_in).days  # Include both check-in and check-out days
+        self.total_amount = num_days * self.room_type.rate_per_night
         self.save()  # Update the model instance with the calculated total amount
 
     def calculate_down_payment(self):
@@ -152,6 +154,6 @@ class Booking(models.Model):
         verbose_name_plural = "Bookings"
 
     def __str__(self):
-        guest_name = self.guest.name if self.guest else "Unknown Guest"
+        guest_name = f"{self.guest.firstname} {self.guest.lastname}" if self.guest else "Unknown Guest"
         room_info = f"{self.room.room_number}" if self.room else "No Room Assigned"
         return f"Booking #{self.pk} for {guest_name} (Room: {room_info}) - {self.status}"

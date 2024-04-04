@@ -11,7 +11,7 @@ urlpatterns = [
     path('room/', views.room, name='room'),
     path('room/<slug:room_slug>/', views.get_room_details, name='room_detail'),
     path('get_room_reservations/<str:room_slug>/', views.get_room_reservations, name='get_room_reservations'),
-
+    path('guest-reservation/', views.guest_reservation, name='guest-reservation'),
 
 
 ]

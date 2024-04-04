@@ -6,13 +6,13 @@ from .models import RoomType, Room, Amenity, Reservation, Guest, Booking
 
 @admin.register(RoomType)
 class RoomTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'rate_per_night', 'description')  # Fields to display in the list view
+    list_display = ('id', 'name', 'rate_per_night', 'description')  # Fields to display in the list view
     search_fields = ('name',)  # Fields to allow searching by
     prepopulated_fields = {'slug': ('name',)}  # Automatically generate slug from name (optional)
 
 @admin.register(Room)
 class RoomAdmin(admin.ModelAdmin):
-    list_display = ('room_number', 'room_type', 'name', 'max_occupancy', 'status')
+    list_display = ('id', 'room_number', 'room_type', 'name', 'max_occupancy', 'status')
     search_fields = ('room_number', 'room_type__name')  # Search by room number and room type name
     list_filter = ('room_type', 'status',)  # Filter by room type and availability
 
@@ -23,9 +23,9 @@ class AmenityAdmin(admin.ModelAdmin):
 
 @admin.register(Reservation)
 class ReservationAdmin(admin.ModelAdmin):
-    list_display = ('room', 'guest', 'check_in', 'check_out', 'is_active', 'total_amount', 'amount_paid', 'status')  # Include new fields
+    list_display = ('room_type', 'room', 'guest', 'date_created', 'check_in', 'check_out', 'is_active', 'total_amount', 'amount_paid', 'status')  # Include new fields
     list_filter = ('room', 'is_active')  # Filters for the list view
-    search_fields = ('guest__name', 'room__room_number')  # Fields for searching
+    search_fields = ('guest__firstname', 'guest__lastname', 'room__room_number')  # Fields for searching
     date_hierarchy = 'check_in'  # Group reservations by check-in date
 
     # Add methods for calculating total and down payment
@@ -39,8 +39,8 @@ class ReservationAdmin(admin.ModelAdmin):
     actions = [calculate_total_amount, calculate_down_payment]  
 
 class GuestAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'phone_number')
-    search_fields = ('name', 'email')  # Allow searching by name and email
+    list_display = ('firstname', 'lastname', 'email', 'phone_number')
+    search_fields = ('firstname', 'lastname', 'email')  # Allow searching by name and email
 
 admin.site.register(Guest, GuestAdmin)
 

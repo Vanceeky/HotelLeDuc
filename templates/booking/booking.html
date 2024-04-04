@@ -591,8 +591,9 @@
           roomTypeSelect.append($('<option value="">-- Select Room Type --</option>'));
           data.forEach(function(roomType) {
             const roomRate = roomType.rate_per_night; // Adjust property name if different
+           
         // Create hidden input field for room rate
-            const hiddenRateInput = $('<input type="hidden" id="roomRate_' + roomType.id + '" value="' + roomRate + '">');
+            const hiddenRateInput = $('<input type="hidden" id="roomRate_' + roomType.id + '" value="'+ roomRate +'">');
             
             roomTypeSelect.append($('<option value="' + roomType.id + '" data-rate-per-night=" ' + roomType.rate_per_night + ' ">' + roomType.name + ' - ₱' + roomRate + '/night</option>').append(hiddenRateInput));
           });
@@ -649,9 +650,12 @@
   
         // Get rate per night from selected room option
         const selectedRoomId = $("#availableRoomsList").val();
+        const selectedRoomTypeId = $("#roomTypeSelect").val();
   
         const selectedRoomOption = $("#availableRoomsList").find(`option[value="${selectedRoomId}"]`);
-        const selectedRoomRate = $(`#roomRate_${selectedRoomId}`).val();
+        console.log(selectedRoomId)
+        console.log(selectedRoomTypeId)
+        const selectedRoomRate = $(`#roomRate_${selectedRoomTypeId}`).val();
         console.log("Selected Room Rate:", selectedRoomRate);
         //const ratePerNight = parseFloat(selectedRoomOption.data('rate-per-night'));
         
