@@ -6,7 +6,7 @@ from .models import MenuItem, OrderItem, Order
 # Register your models here.
 
 class MenuItemAdmin(admin.ModelAdmin):
-  list_display = ('name', 'category', 'price')
+  list_display = ('id', 'name', 'category', 'price')
   search_fields = ('name', 'description')
 
 admin.site.register(MenuItem, MenuItemAdmin)
@@ -29,7 +29,7 @@ class OrderItemAdmin(admin.ModelAdmin):
 admin.site.register(OrderItem, OrderItemAdmin)
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('guest', 'room', 'booking', 'placed_at', 'status', 'total_price')  # Add 'calculate_total_price'
+    list_display = ('booking', 'placed_at', 'status', 'total_price')  # Add 'calculate_total_price'
   
 
 

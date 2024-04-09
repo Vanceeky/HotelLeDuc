@@ -1,0 +1,379 @@
+{% extends 'dashboard/layout/restaurant_base.html' %}
+
+
+{% block title %} Resturant Orders {% endblock %}
+
+{% block stylesheet %}
+
+<style>
+
+</style>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+
+    <div class="row">
+        <div class="col-12">
+          <div class="card mb-4">
+            <div class="card-header pb-0">
+                <div class="d-lg-flex">
+                  <div>
+                    <h5 class="mb-0">Order List</h5>
+                    <p class="text-sm mb-0">
+                      A lightweight, extendable, dependency-free javascript HTML table plugin.
+                    </p>
+                  </div>
+                  <div class="ms-auto my-auto mt-lg-0 mt-4">
+                    <div class="ms-auto my-auto">
+                      <a type="button" class="btn bg-gradient-info btn-block" data-bs-toggle="modal" data-bs-target="#exampleModalSignUp">+&nbsp; Create New Order</a>
+
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+              <div class="table-responsive p-0">
+                <table class="table align-items-center justify-content-center mb-0">
+                  <thead>
+                    <tr>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Product</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Category</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Pricing</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">Serving</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">Status</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <div class="d-flex px-2">
+                          <div>
+                            <img src="../assets/img/small-logos/logo-spotify.svg" class="avatar avatar-sm rounded-circle me-2" alt="spotify">
+                          </div>
+                          <div class="my-auto">
+                            <h6 class="mb-0 text-sm">Spotify</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <p class="text-sm font-weight-bold mb-0">$2,500</p>
+                      </td>
+                      <td>
+                        <span class="text-xs font-weight-bold">working</span>
+                      </td>
+                      <td class="align-middle text-center">
+                        <div class="d-flex align-items-center justify-content-center">
+                          <span class="me-2 text-xs font-weight-bold">60%</span>
+                          <div>
+                            <div class="progress">
+                              <div class="progress-bar bg-gradient-info" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="align-middle">
+                        <button class="btn btn-link text-secondary mb-0">
+                        <i class="fa fa-ellipsis-v text-xs" aria-hidden="true"></i>
+                        </button>
+                      </td>
+                    </tr>
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="exampleModalSignUp" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xs" role="document">
+      <div class="modal-content">
+        <div class="modal-body p-0">
+          <div class="card card-plain">
+            <div class="card-header pb-0 text-left">
+                <h3 class="font-weight-bolder text-primary text-gradient">Create New Order</h3>
+            </div>
+            <div class="card-body pb-3">
+              <form role="form text-left">
+                <div class="form-group">
+                    <label for="room">Room:</label>
+                    <select class="form-control" id="roomTypeSelect" name="room">
+                        <option value="">-- Select Room --</option>
+                        {% for room in bookings %}
+                        <option value="{{ room.id }}" class="text-capitalize"> {{ room.room.room_type }} - Room #{{ room.room.room_number }} - {{ room.guest}}</option>
+                        {% endfor %}
+                    </select>
+                  </div>
+                  <a href="#" id="add_item_link" data-bs-toggle="modal" data-bs-target="#add_item">
+                    <i class="fas fa-plus" aria-hidden="true"></i>&nbsp; Add Item
+                  </a>
+                  
+                  <a type="button" class="" data-bs-toggle="modal" data-bs-target="#add_item"><i class="fas fa-plus" aria-hidden="true"></i>&nbsp; Create New Order</a>
+                <div class="form-group">
+                    <label for="exampleFormControlSelect2">Items:</label>
+                    <select multiple class="form-control" id="itemSelect">
+                      <option ></option>
+                    </select>
+
+                  </div>
+                <div class="text-center">
+                  <button type="submit" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Save order</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="modal fade" id="add_item" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+      <div class="modal-content">
+        <div class="modal-body p-0">
+          <div class="card card-plain">
+            <div class="card-header pb-0 text-left">
+              <h3 class="font-weight-bolder text-primary text-gradient">Add Items</h3>
+            </div>
+            <div class="card-body pb-3">
+              <form role="form text-left" id="add_item_form">
+                {% csrf_token %}
+
+                <div class="form-group">
+                  <label for="exampleFormControlSelect1">Menu Item:</label>
+                  <select class="form-control" id="itemSelect_2" name="menu_item">
+                    <option value="">-- Select Menu Type --</option>
+                    {% comment %} {% for menu in menu_items %}
+                    <option>{{ menu }}</option>
+                    {% endfor %} {% endcomment %}
+                  </select>
+                </div>
+                <label>Quantity:</label>
+                <div class="input-group mb-3">
+                  <input type="text" class="form-control" name="quantity" placeholder="quantity..." aria-label="Guest" aria-describedby="email-addon">
+                </div>
+  
+                <div class="form-group">
+                  <label>Total Cost:</label>
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input type="text" class="form-control" id="total_price" name="total_price" disabled>
+                    <span class="input-group-text">.00</span>
+                  </div>
+                </div>
+  
+                <div class="text-center">
+                  <button type="submit" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Add to Order</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+
+
+{% block javascripts %}
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="/static/assets/js/select.min.js"></script>
+    <script>
+
+    </script>
+
+{% comment %}     <script>
+        fetchBookingDetails()
+
+        $('#roomType').change(function() {
+            const roomTypeId = $(this).val();
+            console.log(roomTypeId)
+            if (roomTypeId) {
+                fetchGuest(roomTypeId);
+                console.log(roomTypeId)
+            } else {
+                alert('test')
+              $('#guest').empty().prop('disabled', true); // Clear previous values when room type changes
+            }
+          });
+        
+
+        function fetchBookingDetails() {
+            $.ajax({
+              url: '/restaurant/api/get-booking-details/',
+              dataType: 'json',
+              success: function(booking_data) {
+                const roomSelect = $('#roomTypeSelect');
+
+                roomSelect.empty(); // Clear existing options
+                roomSelect.append($('<option value="">-- Select Room --</option>'));
+                booking_data.forEach(function(data) {
+                    console.log(data)
+
+
+                    roomSelect.append($('<option value="' + data.id + '">' + data.id + ' - ' + data.room_number + '</option>'));
+
+                  });
+
+              }
+            });
+          }
+
+          function fetchGuest(roomTypeId) {
+            $.ajax({
+                url: '/restaurant/api/get-booking-details/',
+                dataType: 'json',
+                success: function(booking_data){
+                    const guest = $('#guest');
+                    booking_data.forEach(function(data) {
+
+
+                        guest.val(`${data.guest.first_name} ${data.guest.last_name}`);
+                      });
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Error fetching room types:', textStatus, errorThrown);
+                  }
+
+            })
+          }
+
+
+
+          
+          
+    </script> {% endcomment %}
+    
+    <script>
+        $(document).ready(function() {
+          // Initial state - disable item selection until a booking is chosen
+          $('#itemSelect').prop('disabled', true);
+      
+          $('#roomTypeSelect').change(function() {
+            const selectedBookingId = $(this).val();
+      
+            if (selectedBookingId) {
+              // Booking is selected, enable item selection and fetch items via AJAX
+              $('#itemSelect').prop('disabled', false);
+              fetchItemsForBooking(selectedBookingId);
+            } else {
+              // No booking selected, disable item selection and clear existing options
+              $('#itemSelect').prop('disabled', true);
+              $('#itemSelect').empty();
+            }
+          });
+        });
+      
+        function fetchItemsForBooking(bookingId) {
+          // Replace with your actual URL to fetch items based on booking ID
+          const url = `/restaurant/api/bookings/${bookingId}/items/`; 
+      
+          $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+              // Clear existing options
+              $('#itemSelect').empty();
+      
+              if (data.length > 0) {
+                // Loop through item data and create options
+                for (const item of data) {
+                  const option = $('<option>').val(item.id).text(item.name);
+                  $('#itemSelect').append(option);
+                }
+              } else {
+                // No items available for this booking, display informative message
+                const option = $('<option>').val('').text('No items available for this booking');
+                $('#itemSelect').append(option);
+              }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+              console.error('Error fetching items:', textStatus, errorThrown);
+              // Handle errors (e.g., display an error message to the user)
+            }
+          });
+        }
+    </script>
+
+      <script>
+        $(document).ready(function() {
+            fetchMenuItems()
+
+            const bookingSelect = $('#roomTypeSelect');
+            const itemSelect = $('#itemSelect_2');
+            const add_item_link = $('#add_item_link');
+            const add_item_form = $('#add_item_form');
+            const total_price = $('#total_price');
+            const item_price = $('#item_price')
+
+          
+            // Update Total Cost on Quantity Change
+            add_item_form.find('input[name="quantity"]').change(function() {
+                const quantity = $(this).val();
+                const selectedItemPrice = parseFloat($('#itemSelect_2').val()); // Get price from selected option value
+                const totalCost = quantity * selectedItemPrice;
+                total_price.val(totalCost);
+              });
+            
+          
+            // Handle "Add to Order" form submission
+            add_item_form.submit(function(event) {
+              event.preventDefault(); // Prevent default form submission
+          
+              const bookingId = bookingSelect.val();
+              const itemId = itemSelect.val();
+              const quantity = add_item_form.find('input[name="quantity"]').val();
+                
+              if (!bookingId || !itemId || !quantity) {
+                alert('Please select a booking, menu item, and quantity.');
+                return;
+              }
+          
+              // Replace with your actual API endpoint URL
+              const url = `/restaurant/api/bookings/${bookingId}/items/`;
+              const csrftoken = $('input[name="csrfmiddlewaretoken"]').val();
+
+
+            });
+
+            function fetchMenuItems() {
+                $.ajax({
+                  url: '/restaurant/api/menu-items/',
+                  dataType: 'json',
+                  success: function(item_data) {
+                    const itemSelect_2 = $('#itemSelect_2');
+    
+                    itemSelect_2.empty(); // Clear existing options
+                    itemSelect_2.append($('<option value="">-- Select Items --</option>'));
+                    item_data.forEach(function(data) {
+                        const hiddenRateInput = $('<input type="hidden" id="item_price" value="'+ data.price +'">');
+                        const itemPrice = data.price
+                        itemSelect_2.append($('<option value="' + data.price + '">' + data.id + ' - ' + data.price + '</option>').append(hiddenRateInput));
+                        
+                      });
+    
+                  }
+                });
+              }
+
+        });
+
+      </script>
+
+    
+{% endblock %}

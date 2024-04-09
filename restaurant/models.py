@@ -73,7 +73,10 @@ class OrderItem(models.Model):
         else:
             self.total_cost = 0.00
         super().save(*args, **kwargs)  # Call the original save method
-
+    def calculate_total_cost(self):
+        total = self.quantity * self.menu_item.price
+        return total
+    
     def __str__(self):
         total_cost = self.total_cost  # Use the calculated total_cost field
         if total_cost is not None:
@@ -86,8 +89,8 @@ class OrderItem(models.Model):
         verbose_name_plural = "Order Items"
     
 class Order(models.Model):
-    guest = models.ForeignKey(Guest, on_delete=models.CASCADE)
-    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    #guest = models.ForeignKey(Guest, on_delete=models.CASCADE)
+    #room = models.ForeignKey(Room, on_delete=models.CASCADE)
     booking = models.ForeignKey(Booking, on_delete=models.CASCADE, null = True, blank = True, related_name="booking")  # Link order to the guest's room
     placed_at = models.DateTimeField(auto_now_add=True)  # Automatically record order placement time
     # Order status (e.g., pending, preparing, delivered)
@@ -110,7 +113,7 @@ class Order(models.Model):
         total_price = self.get_total_price()
         self.total_price = total_price  # Assign the calculated total before returning
         self.save()  # Save the Order model with the updated total_price
-        return f"Order #{self.pk} for {self.guest.name} (Room: {self.room.room_number}) - {self.placed_at} - {self.status} - Total Price: ₱{total_price}"
+        return f"Order #{self.pk} for {self.booking.guest.firstname}, {self.booking.guest.lastname}, (Room: {self.booking.room.room_number}) - {self.placed_at} - {self.status} - Total Price: ₱{total_price}"
     
     
     class Meta:
