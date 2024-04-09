@@ -72,24 +72,34 @@
             <div class="row py-5">
               <div class="col-lg-7 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mx-auto">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                  <h3 class="mb-0">{{ room_details.name }}</h3>
+                  <h3 class="mb-0">{{ room_slug.name }}</h3> 
                   <div class="d-block">
                     <button type="button" class="btn btn-sm btn-outline-info text-nowrap mb-0">Reservation</button>
                   </div>
                 </div>
                 <div class="row mb-4">
                   <div class="col-auto">
-                    <span class="h6">₱ {{ room_details.room_rate }}</span>
+                    <span class="h6">₱ {{ room_slug.rate_per_night }}</span>
                     <span>/ Night</span>
                   </div>
 
                 </div>
                 <p class="text-lg mb-0">
-                  {{ room_details.description }}<br><a href="javascript:;" class="text-info icon-move-right">More
+                  {{ room_slug.description }}<br><a href="javascript:;" class="text-info icon-move-right">More
                     <i class="fas fa-arrow-right text-sm ms-1"></i>
                   </a>
                 </p>
+
+                <h1>{{ room_details.room_type }} Rooms</h1>
+
+                {% for room_details in rooms %}
+                  <div class="room">
+                    <h3>{{ room_details.room_number }} - {{ room_details.name }}</h3>
+                    <p>{{ room_details.description }}</p>
+                  </div>
+                {% endfor %}
               </div>
+              
             </div>
           </div>
         </div>
@@ -134,7 +144,7 @@
     
                                 <div class="row">
                                   <div class="col-md-7">
-                        
+                                    <div id="roomAvailability"></div>
                                     <div id="calendar"></div>
                 
 
@@ -147,8 +157,8 @@
                                         <p class="mb-0">Enter your email and password to sign in</p>
                                       </div>
                                       <div class="card-body">
-                                          <input type="text" value="{{ room_details.id}}" name="room_type" id="room_type">
-                                          <input type="hidden" value="{{ room_details.room_rate}}" name="room_rate" id="room_rate">
+                                          <input type="text" value="{{ room_slug.id}}" name="room_type" id="room_type">
+                                          <input type="hidden" value="{{ room_slug.rate_per_night}}" name="room_rate" id="room_rate">
                                           
 
                                         
@@ -484,36 +494,39 @@
     
   </script>
  {% endcomment %}
-
- <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+ 
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
- <script>
-   var room_slug = "{{ room_details.slug }}";  // Access room_slug from context
 
-   var calendarEl = document.getElementById('calendar');
- 
-   document.addEventListener('DOMContentLoaded', function() {
-     var calendar = new FullCalendar.Calendar(calendarEl, {
-       initialView: 'dayGridMonth',
-       events: function(fetchInfo, successCallback) {
-        fetch(`/get_room_reservations/${room_slug}/`)
-           .then(response => response.json())
-           .then(reservations => successCallback(reservations))
-           .catch(error => console.error(error));
-       },
-       // Customize event rendering with colors
-       eventDidMount: function(info) {
-         if (info.event.title === "Reserved") {
-           info.el.style.backgroundColor = 'red';
-         } else {
-           info.el.style.backgroundColor = 'green';
-         }
-       }
-     });
- 
-     calendar.render();
-   });
- </script>
+
+<script>
+    var room_slug = "{{ room_slug.slug }}";  // Access room_slug from context
+    var calendarEl = document.getElementById('calendar');
+  
+      document.addEventListener('DOMContentLoaded', function() {
+          var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            events: function(fetchInfo, successCallback) {
+              fetch(`/get_room_reservations/${room_slug}/`)
+                .then(response => response.json())
+                .then(reservations => successCallback(reservations))
+                .catch(error => console.error(error));
+            },
+            // Customize event rendering with colors
+            eventDidMount: function(info) {
+              if (info.event.title === "Reserved") {
+                info.el.style.backgroundColor = 'red';
+              } else {
+                info.el.style.backgroundColor = 'green';
+              }
+            }
+          });
+      
+          calendar.render();
+        }); 
+  </script>
+
+
 
 
   

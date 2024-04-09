@@ -7,6 +7,7 @@ from django.db.models import Q
 from django.http import JsonResponse
 from datetime import datetime
 import json
+from django.shortcuts import redirect, get_object_or_404
 
 def room_types_list(request):
   """API endpoint to retrieve all room types."""
@@ -47,6 +48,68 @@ def available_room_list(request, room_type_pk):
       # 'image_url': room.images.url if room.images else None,
     })
   return JsonResponse(data, safe=False)
+
+#def confirm_reservation(request, pk):
+  reservation = Reservation.objects.get(id = pk)
+  
+  # Check room availability using the reservation dates
+  available_room = Room.objects.filter(status='available').first()
+
+  if available_room:
+    # Assign room and update reservation status
+    reserved_room = ReservedRoom.objects.create(
+        reservation=reservation,
+        room=available_room,
+    )
+    reservation.status = 'confirmed'
+    reservation.room = available_room
+    reservation.save()
+
+
+    
+    # Success message (consider using Django messages framework)
+    message = "Room assigned successfully and reservation confirmed!"
+  else:
+    # No available room found
+    message = "No available room found for the selected dates. Please try a different room or dates."
+
+  return redirect('booking:reservation')
+
+def confirm_reservation(request, pk):
+  reservation = Reservation.objects.get(id = pk)
+  room_type = reservation.room_type  # Assuming a room type is selected during reservation
+
+  # Check for available rooms based on room type and date overlap
+  available_rooms = Room.objects.filter(
+      room_type=room_type,
+      status='available',  # Only consider available rooms
+  ).annotate(
+      num_reservations=Count('reservedroom__reservation', filter=Q(reservedroom__reservation__status='confirmed'))
+  ).filter(num_reservations__lt=4)  # Less than 4 confirmed reservations (assuming 4 rooms per type)
+
+  # Check for overlapping reservations for each available room
+  for room in available_rooms:
+    overlapping_reservations = ReservedRoom.objects.filter(
+        room=room,
+        reservation__status='confirmed',
+        reservation__check_in__lte=reservation.check_in,
+        reservation__check_out__gte=reservation.check_out,
+    )
+    if not overlapping_reservations.exists():
+      # No overlapping reservations found, assign this room
+      reserved_room = ReservedRoom.objects.create(
+          reservation=reservation,
+          room=room,
+      )
+      reservation.status = 'confirmed'
+      reservation.room = room
+      reservation.save()
+      message = "Room assigned successfully and reservation confirmed!"
+      return redirect('booking:reservation')
+
+  # No available room found
+  message = "No available room found for the selected dates. Please try a different room type or dates."
+  return redirect('booking:reservation')
 
 
 def dashboard(request):

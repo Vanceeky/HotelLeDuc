@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import RoomType, Room, Amenity, Reservation, Guest, Booking
+from .models import RoomType, Room, Amenity, Reservation, Guest, Booking, ReservedRoom
 
 
 # Customize the admin display for each model
@@ -38,6 +38,7 @@ class ReservationAdmin(admin.ModelAdmin):
     
     actions = [calculate_total_amount, calculate_down_payment]  
 
+admin.site.register(ReservedRoom)
 class GuestAdmin(admin.ModelAdmin):
     list_display = ('firstname', 'lastname', 'email', 'phone_number')
     search_fields = ('firstname', 'lastname', 'email')  # Allow searching by name and email

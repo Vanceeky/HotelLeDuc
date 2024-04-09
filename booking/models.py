@@ -64,6 +64,10 @@ class Room(models.Model):
     def __str__(self):
         return f"{self.room_number} - {self.room_type}"
     
+
+        
+
+    
 class Guest(models.Model):
     """
     Model to represent hotel guests.
@@ -101,7 +105,7 @@ class Reservation(models.Model):
     )
 
     status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='pending')
-    date_created = models.DateTimeField(auto_now_add=True, null = True, blank=True)
+    date_created = models.DateTimeField(auto_now_add=True)
     class Meta:
         verbose_name = "Reservation"
         verbose_name_plural = "Reservations"
@@ -119,6 +123,30 @@ class Reservation(models.Model):
         # Calculate the 50% down payment
         self.amount_paid = self.total_amount * 0.5
         self.save()  # Update the model instance with the calculated down payment
+
+class ReservedRoom(models.Model):
+  """
+  Model to represent the association between a reservation and a specific room.
+  """
+  reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE)
+  room = models.ForeignKey(Room, on_delete=models.CASCADE)
+
+  date_created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+  STATUS_CHOICES = (
+      ('pending', 'Pending Confirmation'),
+      ('confirmed', 'Confirmed'),
+      ('cancelled', 'Cancelled'),
+  )
+
+  status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='pending')
+
+  class Meta:
+    verbose_name = "Reserved Room"
+    verbose_name_plural = "Reserved Rooms"
+
+  def __str__(self):
+    return f"ReservedRoom: {self.reservation} - Room: {self.room}"
+  
 
 class Booking(models.Model):
     """
@@ -157,3 +185,5 @@ class Booking(models.Model):
         guest_name = f"{self.guest.firstname} {self.guest.lastname}" if self.guest else "Unknown Guest"
         room_info = f"{self.room.room_number}" if self.room else "No Room Assigned"
         return f"Booking #{self.pk} for {guest_name} (Room: {room_info}) - {self.status}"
+    
+    

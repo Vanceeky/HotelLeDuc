@@ -59,7 +59,8 @@
                           <thead>
                             <tr>
                               <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Name</th>
-                              <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">Room</th>
+                              <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">Room Type</th>
+                              <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">Assigned Room</th>
                               <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">Date created</th>
                               <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Check in</th>
                               <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Check out</th>
@@ -79,17 +80,25 @@
                                     <img src="{{ res.guest.avatar.url }}" class="avatar avatar-sm me-3">
                                   </div>
                                   <div class="d-flex flex-column justify-content-center">
-                                    <h6 class="mb-0 text-xs"><a href="{% url 'booking:guest-profile' res.guest.id %}">{{ res.guest.name }}</a></h6>
+                                    <h6 class="mb-0 text-xs"><a href="{% url 'booking:guest-profile' res.guest.id %}">{{res.guest.lastname}}, {{ res.guest.firstname }}</a></h6>
                                     <p class="text-xs text-secondary mb-0">{{ res.guest.phone_number }}</p>
                                   </div>
                                 </div>
                               </td>
                               <td>
-                                <p class="text-xs font-weight-bold mb-0">{{ res.room.name }}</p>
-                                <p class="text-xs text-secondary mb-0">( ₱{{ res.room.room_type.rate_per_night }} / night )</p>
+                                <p class="text-xs font-weight-bold mb-0">{{ res.room_type.name }}</p>
+                                <p class="text-xs text-secondary mb-0">( ₱{{ res.room_type.rate_per_night }} / night )</p>
+                              </td>
+                              <td>
+                                {% if res.room %}
+                                <p class="text-xs font-weight-bold mb-0 text-center">Room #{{ res.room.room_number }}</p>
+                                <p class="text-xs text-secondary mb-0">( ₱{{ res.room_type.rate_per_night }} / night )</p>
+                                {% else %}
+                                <p class="text-xs text-center font-weight-bold mb-0">Room not assigned</p>
+                                {% endif %}
                               </td>
                               <td class="align-middle text-center text-sm">
-                                <span class="text-secondary text-xs font-weight-bold">March 21, 2024 ( thursday  )</span>
+                                <span class="text-secondary text-xs font-weight-bold">{{ res.date_created}}</span>
                               </td>
                               <td class="align-middle text-center text-sm">
                                 <span class="text-secondary text-xs font-weight-bold">{{ res.check_in }} ( {{ res.check_in|date:"l"}} )</span>
@@ -119,7 +128,7 @@
                                 <!--<a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
                                   view
                                 </a>-->
-                                <a class="btn btn-link text-dark p-0 mb-0" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="top" title="Confirm" data-animation="true"><i class="fa fa-check-circle text-dark me-2" aria-hidden="true"></i></a>
+                                <a class="btn btn-link text-dark p-0 mb-0 confirm-reservation" href="{% url 'booking:confirm_reservation' res.id %}" data-reservation-id = "{{ res.id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Confirm" data-animation="true"><i class="fa fa-check-circle text-dark me-2" aria-hidden="true"></i>{{ res.id }}</a>
 
                                 <a class="btn btn-link text-dark p-0 mb-0" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" data-animation="true"><i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i></a>
 
