@@ -47,7 +47,7 @@ admin.site.register(Guest, GuestAdmin)
 
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):
-    list_display = ('guest', 'room', 'check_in', 'check_out', 'has_order', 'status', 'amount_to_pay', 'amount_paid', 'special_requests')
+    list_display = ('id', 'guest', 'room', 'check_in', 'check_out', 'has_order', 'status', 'amount_to_pay', 'amount_paid', 'special_requests')
 
 
  

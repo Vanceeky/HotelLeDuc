@@ -54,6 +54,7 @@ class MenuItem(models.Model):
         verbose_name_plural = "Order Items" """
 
 class OrderItem(models.Model):
+    order = models.ForeignKey('Order', on_delete=models.CASCADE, related_name='orderded_items', null = True, blank=True)
     menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)  # Track quantity of each item per order
     STATUS_CHOICES = (

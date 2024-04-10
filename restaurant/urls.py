@@ -12,6 +12,7 @@ urlpatterns = [
     path('api/bookings/<int:booking_id>/<int:item_id>/items/', views.add_item_to_booking, name='add_item_to_booking'),
 
     path('api/menu-items/', views.menu_items_list, name='menu-items-list'),
+    path('create-order-item/', views.create_order_item_ajax, name="create-order-item")
 
 
   ]

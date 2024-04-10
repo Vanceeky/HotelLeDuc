@@ -8,7 +8,7 @@ urlpatterns = [
 
     path('booking/', views.booking, name='booking'),
     path('booking-details/<int:pk>/', views.booking_details, name='booking-details'),
-
+    path('add-new-booking/', views.add_new_booking, name='add-new-booking'),
 
     path('reservation/', views.reservation, name='reservation'),
     path('reservations/<int:pk>/confirm/', views.confirm_reservation, name='confirm_reservation'),
@@ -21,5 +21,7 @@ urlpatterns = [
 
     path('api/room-types/', views.room_types_list, name='room-types-list'),
     path('api/available-rooms/<int:room_type_pk>/', views.available_room_list, name='available-rooms-list'),
+
+    path('test/', views.reservations_test, name="test"),
 
 ]

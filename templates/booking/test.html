@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservations</title>
+</head>
+<body>
+    <h1>Reservations</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Guest</th>
+                <th>Room</th>
+                <th>Check-in</th>
+                <th>Check-out</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reservation in reservations %}
+                <tr>
+                    <td>{{ reservation.guest }}</td>
+                    {% if reservation.reserved_room %}
+                        <td>{{ reservation.reserved_room.room }}</td>
+                    {% else %}
+                        <td>Room Not Assigned</td>
+                    {% endif %}
+                    <td>{{ reservation.check_in }}</td>
+                    <td>{{ reservation.check_out }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Unavailable Dates</h2>
+    {% if unavailable_dates %}
+        <ul>
+            {% for room, unavailable_room_dates in unavailable_dates.items %}
+                <li><strong>Room: {{ room }}</strong></li>
+                <ul>
+                    {% for unavailable_date in unavailable_room_dates %}
+                        <li>{{ unavailable_date }}</li>
+                    {% endfor %}
+                </ul>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>All dates are currently available.</p>
+    {% endif %}
+</body>
+</html>

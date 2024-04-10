@@ -59,7 +59,7 @@
                           <thead>
                             <tr>
                               <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">ID</th>
-                              <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Name</th>
+                              <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Guest</th>
                               <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">Room</th>
                               <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Check in</th>
                               <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Check out</th>
@@ -77,7 +77,7 @@
                               <td>
                                 <div class="d-flex px-2 py-1">
                                   <div class="d-flex flex-column justify-content-center">
-                                    <h6 class="mb-0 text-md"><a href="{% url 'booking:guest-profile' booking.guest.id  %}">{{ booking.guest.name }}</a></h6>
+                                    <h6 class="mb-0 text-md text-capitalize"><a href="{% url 'booking:guest-profile' booking.guest.id  %}">{{ booking.guest.lastname }}, {{ booking.guest.firstname }}</a></h6>
                                     <p class="text-xs text-secondary mb-0">{{ booking.guest.phone_number }}</p>
                                   </div>
                                 </div>
@@ -215,154 +215,155 @@
                   <p class="mb-0"></p>
                 </div>
                 <div class="card-body">
-
-                  <div class="bs-stepper linear">
-                    <div class="bs-stepper-header" role="tablist">
-                      <div class="step active" data-target="#logins-part">
-                        <button type="button" class="step-trigger" role="tab" aria-controls="logins-part" id="logins-part-trigger" aria-selected="true">
-                        <span class="bs-stepper-circle">1</span>
-                        <span class="bs-stepper-label">Guest</span>
-                        </button>
+                  <form role="form text-left" method="POST" action="{% url 'booking:add-new-booking' %}">
+                    <div class="bs-stepper linear">
+                      <div class="bs-stepper-header" role="tablist">
+                        <div class="step active" data-target="#logins-part">
+                          <button type="button" class="step-trigger" role="tab" aria-controls="logins-part" id="logins-part-trigger" aria-selected="true">
+                          <span class="bs-stepper-circle">1</span>
+                          <span class="bs-stepper-label">Guest</span>
+                          </button>
+                        </div>
+                        <div class="line"></div>
+                        <div class="step" data-target="#information-part">
+                          <button type="button" class="step-trigger" role="tab" aria-controls="information-part" id="information-part-trigger" aria-selected="false" disabled="disabled">
+                          <span class="bs-stepper-circle">2</span>
+                          <span class="bs-stepper-label">Booking Information</span>
+                          </button>
+                        </div>
                       </div>
-                      <div class="line"></div>
-                      <div class="step" data-target="#information-part">
-                        <button type="button" class="step-trigger" role="tab" aria-controls="information-part" id="information-part-trigger" aria-selected="false" disabled="disabled">
-                        <span class="bs-stepper-circle">2</span>
-                        <span class="bs-stepper-label">Booking Information</span>
-                        </button>
-                      </div>
-                    </div>
-                    <div class="bs-stepper-content">
-                      <div id="logins-part" class="content active dstepper-block" role="tabpanel" aria-labelledby="logins-part-trigger">
+                      <div class="bs-stepper-content">
+                        <div id="logins-part" class="content active dstepper-block" role="tabpanel" aria-labelledby="logins-part-trigger">
 
-                        <form role="form text-left">
-                          {% csrf_token %}
+                          
+                            {% csrf_token %}
+                            <div class="row">
+      
+        
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label for="example-text-input" class="form-control-label">Firstname:</label>
+                                  <input class="form-control" type="text" value="" name="firstname" id="example-text-input" placeholder="Ivan">
+                                </div>
+                              </div>
+        
+        
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label for="example-text-input" class="form-control-label">Lastname:</label>
+                                  <input class="form-control" type="text" value="" name="lastname" id="example-text-input" placeholder="James">
+                                </div>
+                              </div>
+
+                              <div class="col-md-4">
+                                <div class="form-group">
+                                  <label for="example-text-input" class="form-control-label">Contact Number:</label>
+                                  <input class="form-control" type="phone" name="phone_number" value="" id="example-text-input" placeholder="09456656707">
+                                </div>
+                              </div>
+        
+        
+                              <div class="col-md-8">
+                                <div class="form-group">
+                                  <label for="example-text-input" class="form-control-label">Email</label>
+                                  <input class="form-control" type="email" value="" name="email" id="example-text-input" placeholder="james.ivan@email.com">
+                                </div>
+                              </div>
+
+                              <div class="form-group">
+                                <label for="exampleFormControlTextarea1">Address</label>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" name="address" rows="3"></textarea>
+                              </div>
+                              
+                            </div>
+        
+                          
+
+                          <button type="button" class="btn btn-round bg-gradient-info btn-md w-100 mt-4 mb-0" onclick="stepper.next()">Next</button>
+
+
+                        </div>
+
+
+                        <div id="information-part" class="content" role="tabpanel" aria-labelledby="information-part-trigger">
+
+
+                          
                           <div class="row">
-    
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                  <label for="roomTypeSelect">Room Type:</label>
+                                  <select class="form-control" id="roomTypeSelect" name="room_type_id" required>
+                                      <option value="">-- Select Room Type --</option>  </select>
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="availableRoomsList">Available Rooms:</label>
+                                    <select class="form-control" id="availableRoomsList" name="room_id" readonly required>
+                                        <option>-- Select Room Type First --</option>  </select>
+                                </div>
+                            </div>
       
                             <div class="col-md-6">
                               <div class="form-group">
-                                <label for="example-text-input" class="form-control-label">Firstname:</label>
-                                <input class="form-control" type="text" value="" id="example-text-input" placeholder="Ivan">
+                                <label for="example-datetime-local-input" class="form-control-label">Check In</label>
+                                <input class="form-control" type="datetime-local" name="check_in" value="" id="check_in" required>
+                              </div>
+                            </div>
+      
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label for="example-datetime-local-input" class="form-control-label">Check Out</label>
+                                <input class="form-control" type="datetime-local" name="check_out" value="" id="check_out" required>
                               </div>
                             </div>
       
       
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                               <div class="form-group">
-                                <label for="example-text-input" class="form-control-label">Lastname:</label>
-                                <input class="form-control" type="text" value="" id="example-text-input" placeholder="James">
+                                <label for="example-text-input" class="form-control-label">Length of stay</label>
+                                <input class="form-control" type="text" value="" name="length_of_stay" id="length_of_stay" disabled required>
+                              </div>
+                            </div>
+      
+      
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label for="example-text-input" class="form-control-label">Amount to pay: </label>
+                                <div class="input-group">
+                                  <span class="input-group-text">₱</span>
+                                  <input type="number" class="form-control" name="amount_to_pay" aria-label="Amount (to the nearest dollar)" id="amount_to_pay" readonly required>
+                                  <span class="input-group-text">.00</span>
+                                </div>
                               </div>
                             </div>
 
                             <div class="col-md-4">
                               <div class="form-group">
-                                <label for="example-text-input" class="form-control-label">Contact Number:</label>
-                                <input class="form-control" type="phone" value="" id="example-text-input" placeholder="09456656707">
+                                <label for="example-text-input" class="form-control-label">Amount paid: </label>
+                                <div class="input-group">
+                                  <span class="input-group-text">₱</span>
+                                  <input type="text" class="form-control" name="amount_paid" aria-label="Amount (to the nearest dollar)" required>
+                                
+                                  <span class="input-group-text">.00</span>
+                                </div>
                               </div>
-                            </div>
-      
-      
-                            <div class="col-md-8">
-                              <div class="form-group">
-                                <label for="example-text-input" class="form-control-label">Email</label>
-                                <input class="form-control" type="email" value="" id="example-text-input" placeholder="james.ivan@email.com">
-                              </div>
-                            </div>
-
-                            <div class="form-group">
-                              <label for="exampleFormControlTextarea1">Address</label>
-                              <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                             </div>
                             
                           </div>
-      
-                        </form>
-
-                        <button type="button" class="btn btn-round bg-gradient-info btn-md w-100 mt-4 mb-0" onclick="stepper.next()">Next</button>
-
-
-                      </div>
-
-
-                      <div id="information-part" class="content" role="tabpanel" aria-labelledby="information-part-trigger">
-
-
-                        
-                        <div class="row">
-                          <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="roomTypeSelect">Room Type:</label>
-                                <select class="form-control" id="roomTypeSelect">
-                                    <option value="">-- Select Room Type --</option>  </select>
-                            </div>
-                          </div>
-                          <div class="col-md-6">
-                              <div class="form-group">
-                                  <label for="availableRoomsList">Available Rooms:</label>
-                                  <select class="form-control" id="availableRoomsList" disabled>
-                                      <option>-- Select Room Type First --</option>  </select>
-                              </div>
-                          </div>
-    
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <label for="example-datetime-local-input" class="form-control-label">Check In</label>
-                              <input class="form-control" type="datetime-local" value="" id="check_in">
-                            </div>
-                          </div>
-    
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <label for="example-datetime-local-input" class="form-control-label">Check Out</label>
-                              <input class="form-control" type="datetime-local" value="" id="check_out">
-                            </div>
-                          </div>
-    
-    
-                          <div class="col-md-4">
-                            <div class="form-group">
-                              <label for="example-text-input" class="form-control-label">Length of stay</label>
-                              <input class="form-control" type="text" value="" id="length_of_stay" disabled>
-                            </div>
-                          </div>
-    
-    
-                          <div class="col-md-4">
-                            <div class="form-group">
-                              <label for="example-text-input" class="form-control-label">Amount to pay: </label>
-                              <div class="input-group">
-                                <span class="input-group-text">₱</span>
-                                <input type="number" class="form-control" aria-label="Amount (to the nearest dollar)" id="amount_to_pay" disabled>
-                                <span class="input-group-text">.00</span>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div class="col-md-4">
-                            <div class="form-group">
-                              <label for="example-text-input" class="form-control-label">Amount paid: </label>
-                              <div class="input-group">
-                                <span class="input-group-text">₱</span>
-                                <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
-                               
-                                <span class="input-group-text">.00</span>
-                              </div>
-                            </div>
-                          </div>
                           
-                        </div>
+                          <hr class="dark horizontal">
+                          <div class="d-flex justify-content-between">
+                          <button type="button" class="btn btn-outline-primary btn-md  mb-0 " onclick="stepper.previous()">Previous</button>
+                          
+                          <button type="submit" class="btn bg-gradient-success btn-md  mb-0" onclick="stepper.previous()">Add booking</button>
+                          </div>
                         
-                        <hr class="dark horizontal">
-                        <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-outline-primary btn-md  mb-0 " onclick="stepper.previous()">Previous</button>
-                        
-                        <button type="button" class="btn bg-gradient-success btn-md  mb-0" onclick="stepper.previous()">Add booking</button>
                         </div>
-                      
                       </div>
                     </div>
-                  </div>
+                  </form>
                   
 
                   <!--
@@ -614,7 +615,7 @@
           availableRoomsList.empty();
           if (data.length > 0) {
             data.forEach(function(room) {
-              availableRoomsList.append($('<option value="' + room.id + '">' + "Room #" + room.room_number + ' - ' + room.name + '</option>'));
+              availableRoomsList.append($('<option value="' + room.id + '">' + "Room #" + room.room_number + ' - ' + room.name + ' - '+ room.id +' </option>'));
             });
           } else {
             availableRoomsList.append($('<option>-- No Available Rooms --</option>'));

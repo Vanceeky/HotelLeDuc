@@ -38,15 +38,14 @@ class Room(models.Model):
     """
     room_number = models.CharField(max_length=10, unique=True)
     room_type = models.ForeignKey(RoomType, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100, blank=True)  # Optional room name (e.g., "Honeymoon Suite")
+    name = models.CharField(max_length=100, blank=True)
     description = models.TextField(blank=True)
 
 
-    # Additional fields:
-    max_occupancy = models.PositiveIntegerField(blank=True, null=True)  # Non-negative integer
+    max_occupancy = models.PositiveIntegerField(blank=True, null=True) 
     amenities = models.ManyToManyField('Amenity', blank=True)  # Relationship with Amenities model
 
-    # **New status field with choices**
+
     STATUS_CHOICES = (
         ('available', 'Available'),
         ('occupied', 'Occupied'),
@@ -156,8 +155,8 @@ class Booking(models.Model):
 
     # Room reservation
     room = models.ForeignKey(Room, on_delete=models.CASCADE, blank=True, null=True)
-    check_in = models.DateField(blank=True, null=True) 
-    check_out = models.DateField(blank=True, null=True) 
+    check_in = models.DateTimeField(blank=True, null=True) 
+    check_out = models.DateTimeField(blank=True, null=True) 
 
    
     order = models.OneToOneField(
@@ -185,5 +184,4 @@ class Booking(models.Model):
         guest_name = f"{self.guest.firstname} {self.guest.lastname}" if self.guest else "Unknown Guest"
         room_info = f"{self.room.room_number}" if self.room else "No Room Assigned"
         return f"Booking #{self.pk} for {guest_name} (Room: {room_info}) - {self.status}"
-    
     

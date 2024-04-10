@@ -12,7 +12,7 @@ class MenuItemAdmin(admin.ModelAdmin):
 admin.site.register(MenuItem, MenuItemAdmin)
 
 class OrderItemAdmin(admin.ModelAdmin):
-    list_display = ('menu_item', 'quantity', 'placed_at', 'status', 'total_cost')  # Add 'calculate_total_cost'
+    list_display = ('id', 'menu_item', 'quantity', 'placed_at', 'status', 'total_cost')  # Add 'calculate_total_cost'
     #readonly_fields = ('calculate_total_cost',)  # Display 'calculate_total_cost' as read-only
 
     def calculate_total_cost(self, obj):

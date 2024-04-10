@@ -24,7 +24,7 @@
                           </div>
                           <div class="col-md-6 d-flex justify-content-end align-items-center">
                             <i class="far fa-calendar-alt me-2" aria-hidden="true"></i>
-                            <small>23 - 30 March 2020</small>
+                            <small>23 - 30 March 2024</small>
                           </div>
                         </div>
                       </div>
@@ -32,15 +32,15 @@
                       <ul class="list-group">
                         <li class="list-group-item border-0 d-flex p-4 border-radius-lg">
                           <div class="d-flex flex-column">
-                            <h6 class="mb-3 text-md">Presidential Suite</h6>
+                            <h6 class="mb-3 text-md">{{ booking.room.room_type}}</h6>
                             <span class="mb-2 text-md">Check In: <span class="text-dark ms-sm-2 font-weight-bold">{{ booking.check_in}} <span class="text-muted text-xs"> ( {{ booking.check_in|date:"l"}} )</span></span></span>
                             <span class="mb-2 text-md">Check Out: <span class="text-dark ms-sm-2 font-weight-bold">{{ booking.check_out}} <span class="text-muted text-xs"> ( {{ booking.check_out|date:"l"}} )</span></span></span>
-                            <span class="mb-2 text-md">Amount to pay: <span class="text-dark ms-sm-2 font-weight-bold">₱ 3500.00 ( 2 nights )</span></span>
-                            <span class="mb-2 text-md">Amount Paid: <span class="text-dark ms-sm-2 font-weight-bold">₱ 3500.00 </span></span>
+                            <span class="mb-2 text-md">Amount to pay: <span class="text-dark ms-sm-2 font-weight-bold">₱ {{ booking.amount_to_pay}} ( 2 nights )</span></span>
+                            <span class="mb-2 text-md">Amount Paid: <span class="text-dark ms-sm-2 font-weight-bold">₱ {{ booking.amount_paid }} </span></span>
                             <span class="mb-2 text-md">Status: <span class="badge badge-pill badge-md bg-gradient-warning">{{ booking.status }}</span></span>
                           </div>
                           <div class="ms-auto text-end">
-                            <a class="btn btn-link text-dark p-0 mb-0" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="top" data-animation="true" aria-label="Confirm" data-bs-original-title="Confirm"><i class="fa fa-check-circle text-dark me-2" aria-hidden="true"></i></a>
+                            <a class="btn btn-link text-dark p-0 mb-0" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="top" data-animation="true" aria-label="Confirm" data-bs-original-title="Checkout Guest"><i class="fa fa-check-circle text-dark me-2" aria-hidden="true"></i></a>
                             <a class="btn btn-link text-dark p-0 mb-0" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="top" data-animation="true" aria-label="Edit" data-bs-original-title="Edit"><i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i></a>
                             <a class="btn btn-link text-dark p-0 mb-0" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="top" data-animation="true" aria-label="Cancel" data-bs-original-title="Cancel"><i class="fas fa-trash-alt text-dark me-2" aria-hidden="true"></i></a>
                           </div>
@@ -74,8 +74,8 @@
                               
                             </div>
                           </div>
-                          <div class="d-flex align-items-center text-success text-gradient text-sm font-weight-bold">
-                            + ₱ {{  item.total_cost}}
+                          <div class="d-flex align-items-center  text-success text-gradient text-sm font-weight-bold">
+                            <span>+ ₱ {{  item.total_cost }}</span>
                           </div>
                         </li>
 
@@ -93,9 +93,8 @@
 
                       </ul>
 
-
                       <span class="mb-2 text-md d-flex justify-content-end">Total Balance: <span class="text-dark ms-sm-2 font-weight-bold">₱ {{ order.total_price}} </span></span>
-
+                      
                     </div>
                   </div>
             </div>

@@ -16,126 +16,170 @@
 {% block content %}
 
 <div class="container-fluid py-4">
-
-
-    <div class="row">
-        <div class="col-12">
-          <div class="card mb-4">
-            <div class="card-header pb-0">
-                <div class="d-lg-flex">
-                  <div>
-                    <h5 class="mb-0">Order List</h5>
-                    <p class="text-sm mb-0">
-                      A lightweight, extendable, dependency-free javascript HTML table plugin.
-                    </p>
-                  </div>
-                  <div class="ms-auto my-auto mt-lg-0 mt-4">
-                    <div class="ms-auto my-auto">
-                      <a type="button" class="btn bg-gradient-info btn-block" data-bs-toggle="modal" data-bs-target="#exampleModalSignUp">+&nbsp; Create New Order</a>
-
-                    </div>
-                  </div>
-                </div>
-            </div>
-            <div class="card-body px-0 pt-0 pb-2">
-              <div class="table-responsive p-0">
-                <table class="table align-items-center justify-content-center mb-0">
-                  <thead>
-                    <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Product</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Category</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Pricing</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">Serving</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">Status</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2">
-                          <div>
-                            <img src="../assets/img/small-logos/logo-spotify.svg" class="avatar avatar-sm rounded-circle me-2" alt="spotify">
-                          </div>
-                          <div class="my-auto">
-                            <h6 class="mb-0 text-sm">Spotify</h6>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <p class="text-sm font-weight-bold mb-0">$2,500</p>
-                      </td>
-                      <td>
-                        <span class="text-xs font-weight-bold">working</span>
-                      </td>
-                      <td class="align-middle text-center">
-                        <div class="d-flex align-items-center justify-content-center">
-                          <span class="me-2 text-xs font-weight-bold">60%</span>
-                          <div>
-                            <div class="progress">
-                              <div class="progress-bar bg-gradient-info" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                      <td class="align-middle">
-                        <button class="btn btn-link text-secondary mb-0">
-                        <i class="fa fa-ellipsis-v text-xs" aria-hidden="true"></i>
-                        </button>
-                      </td>
-                    </tr>
-
-                  </tbody>
-                </table>
+  <div class="row">
+      
+    <div class="col-8">
+      <div class="card mb-4">
+        <div class="card-header pb-0">
+            <div class="d-lg-flex">
+              <div>
+                <h5 class="mb-0">Order list</h5>
               </div>
+
             </div>
-          </div>
         </div>
-    </div>
-
-</div>
-
-<div class="modal fade" id="exampleModalSignUp" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xs" role="document">
-      <div class="modal-content">
-        <div class="modal-body p-0">
-          <div class="card card-plain">
-            <div class="card-header pb-0 text-left">
-                <h3 class="font-weight-bolder text-primary text-gradient">Create New Order</h3>
-            </div>
-            <div class="card-body pb-3">
-              <form role="form text-left">
-                <div class="form-group">
-                    <label for="room">Room:</label>
-                    <select class="form-control" id="roomTypeSelect" name="room">
-                        <option value="">-- Select Room --</option>
-                        {% for room in bookings %}
-                        <option value="{{ room.id }}" class="text-capitalize"> {{ room.room.room_type }} - Room #{{ room.room.room_number }} - {{ room.guest}}</option>
-                        {% endfor %}
-                    </select>
-                  </div>
-                  <a href="#" id="add_item_link" data-bs-toggle="modal" data-bs-target="#add_item">
-                    <i class="fas fa-plus" aria-hidden="true"></i>&nbsp; Add Item
-                  </a>
+        <div class="card-body px-0 pt-0 pb-2">
+          <div class="table-responsive p-0">
+            <table class="table align-items-center justify-content-center mb-0">
+              <thead>
+                <tr>
+                  <th class="text-uppercase text-center text-secondary text-xxs font-weight-bolder opacity-7">Order ID</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Room</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Guest</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Items</th>
+                  <th class="text-uppercase text-center text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">Status</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">Total Cost</th>
                   
-                  <a type="button" class="" data-bs-toggle="modal" data-bs-target="#add_item"><i class="fas fa-plus" aria-hidden="true"></i>&nbsp; Create New Order</a>
-                <div class="form-group">
-                    <label for="exampleFormControlSelect2">Items:</label>
-                    <select multiple class="form-control" id="itemSelect">
-                      <option ></option>
-                    </select>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
 
-                  </div>
-                <div class="text-center">
-                  <button type="submit" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Save order</button>
-                </div>
-              </form>
-            </div>
+                </tr>
+              </thead>
+              <tbody>
+                {% for order in orders_list %}
+
+                <tr>
+
+                  <td>
+                      <p class="text-sm text-center font-weight-bold mb-0 text-uppercase">{{ order.id }}</p>
+            
+                  </td>
+                  <td>
+                    <p class="text-md font-weight-bold mb-0">Room #{{ order.booking.room.room_number }}</p>
+                    <p class="text-xs text-secondary mb-0">( {{ order.booking.room.room_type.name }} )</p>
+                  </td>
+                  <td>
+                    <p class="text-sm font-weight-bold mb-0 text-capitalize">{{ order.booking.guest.lastname }}, {{ order.booking.guest.firstname}}</p>
+                  </td>
+                  <td class="text-center">
+                    
+                  <ul class="list-group">
+
+                     <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                       <div class="d-flex align-items-center">
+
+                         <div class="d-flex flex-column align-items-center">
+                           <a data-bs-toggle="collapse" href="#_{{order.id}}_" role="button" aria-expanded="false" aria-controls="">
+                               <h6 class="mb-0 text-dark text-sm">View Orders</h6>
+                               
+                           </a>
+                         </div>
+
+                         <div class="icon icon-shape icon-sm me-3 bg-gradient-info shadow text-center mx-2">
+                          <i class="ni ni-bold-down text-white opacity-10"></i>
+                        </div>
+
+                       </div>
+                     </li>
+                     
+                     <div class="collapse mx-3" id="_{{ order.id }}_"> <!--  id="room.id "-->
+                       <ul class="list-group">
+
+                          {% for item in order.items.all %}
+                          <li class="list-group-item border-0 d-flex justify-content-between ps-0 border-radius-lg">
+                            <div class="d-flex align-items-center">
+                              <button class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-3 btn-sm d-flex align-items-center justify-content-center"><i class="fas fa-arrow-up" aria-hidden="true"></i></button>
+                              <div class="d-flex flex-column">
+                                <h6 class="mb-0 text-dark text-sm">{{ item.menu_item.name }} <span class="text-muted text-xs">({{ item.quantity }}) - </span></h6>
+                                <span class="text-start text-xs">{{ item.status }}</span>
+                              </div>
+                            </div>
+                            <div class="d-flex align-items-center  text-success text-gradient text-sm font-weight-bold">
+                              <span>+ ₱ {{  item.total_cost }}</span>
+                            </div>
+                          </li>
+                          {% endfor %}
+
+
+                          
+ 
+                            
+                       </ul>
+                     </div>
+              
+ 
+       
+                   </ul>
+
+
+                  </td>
+
+                  <td class="text-center">
+                    <span class="badge badge-pill text-center badge-md bg-gradient-success">
+                      <p class="text-xs text-center font-weight-bold mb-0">{{ order.status }}</p>
+                    </span>
+                  </td>
+
+                  <td class="text-center">
+                    <button type="button" class="btn btn-xs m-auto btn-outline-info">₱{{ order.total_price }}</button>
+                  </td>
+
+                  <td class="text-center">
+                    
+                    <button class="btn btn-link text-dark text-sm mb-0 px-0 ms-2"><i class="fas fa-file-pdf text-lg me-1" aria-hidden="true"></i> PDF</button>
+                  </td>
+
+                </tr>
+
+                {% endfor %}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
     </div>
+
+    <div class="col-4">
+      <div class="card">
+        <div class="card-header pb-0 text-left">
+          <h3 class="font-weight-bolder text-info text-gradient">Add new Order</h3>
+        </div>
+        <div class="card-body">
+          <form role="form text-left">
+            <div class="form-group">
+                <label for="room">Room:</label>
+                <select class="form-control" id="roomTypeSelect" name="room">
+                    <option value="">-- Select Room --</option>
+                    {% for room in bookings %}
+                    <option value="{{ room.id }}" class="text-capitalize"> {{ room.room.room_type }} - Room #{{ room.room.room_number }} - {{ room.guest}}</option>
+                    {% endfor %}
+                </select>
+              </div>
+                {% comment %}               <a href="#" id="add_item_link" data-bs-toggle="modal" data-bs-target="#add_item">
+                                <i class="fas fa-plus" aria-hidden="true"></i>&nbsp; Add new Item
+                              </a> {% endcomment %}
+              
+            <div class="form-group">
+                <label for="exampleFormControlSelect2">Items:</label>
+                <select multiple class="form-control" id="itemSelect">
+                  <option ></option>
+                </select>
+
+            </div>
+
+            <div class="text-center">
+              <button type="button" class="btn bg-gradient-info btn-lg btn-rounded w-100 mt-4 mb-0" id="add_item_link" data-bs-toggle="modal" data-bs-target="#add_item"><i class="fas fa-plus" aria-hidden="true"></i>&nbsp;&nbsp; Add item</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
 </div>
+
+
+</div>
+
+
 
 <div class="modal fade" id="add_item" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-md" role="document">
@@ -143,45 +187,50 @@
         <div class="modal-body p-0">
           <div class="card card-plain">
             <div class="card-header pb-0 text-left">
-              <h3 class="font-weight-bolder text-primary text-gradient">Add Items</h3>
+              <h3 class="font-weight-bolder text-info text-gradient">Add Items</h3>
             </div>
             <div class="card-body pb-3">
-              <form role="form text-left" id="add_item_form">
-                {% csrf_token %}
+            <form role="form text-left" id="add_item_form" method="post">
+              {% csrf_token %}
+            
+              <div class="form-group">
+                <label for="exampleFormControlSelect1">Menu Item:</label>
+                <select class="form-control" id="menu_itemSelect" name="menu_item">
+                </select>
+                <input type="hidden" id="menu_item_id" name="menu_item_id">
+                <input type="hidden" id="menu_item_price" name="menu_item_price">
+                <input type="hidden" id="room_id" name="room_id">
+                
+              </div>
+            
+              <label>Quantity:</label>
+              <div class="input-group mb-3">
+                <input type="text" class="form-control" id="quantity" name="quantity" placeholder="quantity..." aria-label="Guest" aria-describedby="email-addon">
+              </div>
 
-                <div class="form-group">
-                  <label for="exampleFormControlSelect1">Menu Item:</label>
-                  <select class="form-control" id="itemSelect_2" name="menu_item">
-                    <option value="">-- Select Menu Type --</option>
-                    {% comment %} {% for menu in menu_items %}
-                    <option>{{ menu }}</option>
-                    {% endfor %} {% endcomment %}
-                  </select>
+
+            
+              <div class="form-group">
+                <label>Total Cost:</label>
+                <div class="input-group">
+                  <span class="input-group-text">₱</span>
+                  <input type="text" class="form-control" id="total_price" name="total_price" disabled>
+                  <span class="input-group-text">.00</span>
                 </div>
-                <label>Quantity:</label>
-                <div class="input-group mb-3">
-                  <input type="text" class="form-control" name="quantity" placeholder="quantity..." aria-label="Guest" aria-describedby="email-addon">
-                </div>
-  
-                <div class="form-group">
-                  <label>Total Cost:</label>
-                  <div class="input-group">
-                    <span class="input-group-text">$</span>
-                    <input type="text" class="form-control" id="total_price" name="total_price" disabled>
-                    <span class="input-group-text">.00</span>
-                  </div>
-                </div>
-  
-                <div class="text-center">
-                  <button type="submit" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Add to Order</button>
-                </div>
-              </form>
+              </div>
+            
+              <div class="text-center">
+                <button type="button" id="add_item_to_booking_btn" class="btn bg-gradient-info btn-lg btn-rounded w-100 mt-4 mb-0">Add to Order</button>
+              </div>
+            </form>
+            
+
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+</div>
 
 {% endblock %}
 
@@ -193,187 +242,183 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="/static/assets/js/select.min.js"></script>
     <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const roomSelect = document.getElementById('roomTypeSelect');
+        const addItemButton = document.getElementById('add_item_link');
+      
+        function updateButtonState() {
+          const selectedRoom = roomSelect.value;
+          addItemButton.disabled = selectedRoom === '';
+        }
+      
+        // Initial state check
+        updateButtonState();
+      
+        // Update button state on room selection change
+        roomSelect.addEventListener('change', updateButtonState);
+      });
+
 
     </script>
-
-{% comment %}     <script>
-        fetchBookingDetails()
-
-        $('#roomType').change(function() {
-            const roomTypeId = $(this).val();
-            console.log(roomTypeId)
-            if (roomTypeId) {
-                fetchGuest(roomTypeId);
-                console.log(roomTypeId)
-            } else {
-                alert('test')
-              $('#guest').empty().prop('disabled', true); // Clear previous values when room type changes
-            }
-          });
-        
-
-        function fetchBookingDetails() {
-            $.ajax({
-              url: '/restaurant/api/get-booking-details/',
-              dataType: 'json',
-              success: function(booking_data) {
-                const roomSelect = $('#roomTypeSelect');
-
-                roomSelect.empty(); // Clear existing options
-                roomSelect.append($('<option value="">-- Select Room --</option>'));
-                booking_data.forEach(function(data) {
-                    console.log(data)
-
-
-                    roomSelect.append($('<option value="' + data.id + '">' + data.id + ' - ' + data.room_number + '</option>'));
-
-                  });
-
-              }
-            });
-          }
-
-          function fetchGuest(roomTypeId) {
-            $.ajax({
-                url: '/restaurant/api/get-booking-details/',
-                dataType: 'json',
-                success: function(booking_data){
-                    const guest = $('#guest');
-                    booking_data.forEach(function(data) {
-
-
-                        guest.val(`${data.guest.first_name} ${data.guest.last_name}`);
-                      });
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.error('Error fetching room types:', textStatus, errorThrown);
-                  }
-
-            })
-          }
-
-
-
-          
-          
-    </script> {% endcomment %}
-    
     <script>
-        $(document).ready(function() {
-          // Initial state - disable item selection until a booking is chosen
-          $('#itemSelect').prop('disabled', true);
-      
-          $('#roomTypeSelect').change(function() {
-            const selectedBookingId = $(this).val();
-      
-            if (selectedBookingId) {
-              // Booking is selected, enable item selection and fetch items via AJAX
-              $('#itemSelect').prop('disabled', false);
-              fetchItemsForBooking(selectedBookingId);
-            } else {
-              // No booking selected, disable item selection and clear existing options
-              $('#itemSelect').prop('disabled', true);
-              $('#itemSelect').empty();
-            }
-          });
+      $(document).ready(function() {
+        // Initial state - disable item selection until a booking is chosen
+        $('#itemSelect').prop('disabled', true);
+    
+        $('#roomTypeSelect').change(function() {
+          const selectedBookingId = $(this).val();
+          console.log(selectedBookingId)
+          $('#room_id').val(selectedBookingId)
+    
+          if (selectedBookingId) {
+            // Booking is selected, enable item selection and fetch items via AJAX
+            $('#itemSelect').prop('disabled', false);
+            fetchItemsForBooking(selectedBookingId);
+          } else {
+            // No booking selected, disable item selection and clear existing options
+            $('#itemSelect').prop('disabled', true);
+            $('#itemSelect').empty();
+          }
         });
-      
-        function fetchItemsForBooking(bookingId) {
-          // Replace with your actual URL to fetch items based on booking ID
-          const url = `/restaurant/api/bookings/${bookingId}/items/`; 
-      
-          $.ajax({
-            url: url,
-            type: 'GET',
-            dataType: 'json',
-            success: function(data) {
-              // Clear existing options
-              $('#itemSelect').empty();
-      
-              if (data.length > 0) {
-                // Loop through item data and create options
-                for (const item of data) {
-                  const option = $('<option>').val(item.id).text(item.name);
-                  $('#itemSelect').append(option);
-                }
-              } else {
-                // No items available for this booking, display informative message
-                const option = $('<option>').val('').text('No items available for this booking');
+      });
+    
+      function fetchItemsForBooking(bookingId) {
+        // Replace with your actual URL to fetch items based on booking ID
+        const url = `/restaurant/api/bookings/${bookingId}/items/`; 
+    
+        $.ajax({
+          url: url,
+          type: 'GET',
+          dataType: 'json',
+          success: function(data) {
+            // Clear existing options
+            $('#itemSelect').empty();
+    
+            if (data.length > 0) {
+              // Loop through item data and create options
+              for (const item of data) {
+                const optionText = `${item.name} (Qty: ${item.quantity}, Cost: ₱${item.total_cost})`;
+                const option = $('<option>').val(item.id).text(optionText);
                 $('#itemSelect').append(option);
               }
+            } else {
+              // No items available for this booking, display informative message
+              const option = $('<option>').val('').text('No items available for this booking');
+              $('#itemSelect').append(option);
+            }
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            console.error('Error fetching items:', textStatus, errorThrown);
+            // Handle errors (e.g., display an error message to the user)
+          }
+        });
+      }
+  </script>
+
+    <script>
+      $(document).ready(function() {
+
+        function fetchMenuItems() {
+          $.ajax({
+            url: '/restaurant/api/menu-items/',
+            dataType: 'json',
+            success: function(item_data) {
+              $('#menu_itemSelect').empty();
+              $('#menu_itemSelect').append($('<option value="">-- Select Items --</option>'));
+      
+              item_data.forEach(function(data) {
+                const hiddenPriceInput = $('<input type="hidden" id="item_price_' + data.id + '" value="' + data.price + '">');
+                const option = $(`<option value="${data.id}">${data.id} - ${data.name} - ₱${data.price}</option>`).append(hiddenPriceInput);
+                $('#menu_itemSelect').append(option);
+              });
+      
+              // Attach event listener outside the loop for all options
+              $('#menu_itemSelect').change(function() {
+                const selectedId = $(this).val();
+                const selectedPrice = $('#item_price_' + selectedId).val();
+                console.log(selectedId);
+                console.log(selectedPrice);
+      
+                $('#menu_item_id').val(selectedId);
+                $('#menu_item_price').val(selectedPrice);
+              });
             },
             error: function(jqXHR, textStatus, errorThrown) {
-              console.error('Error fetching items:', textStatus, errorThrown);
-              // Handle errors (e.g., display an error message to the user)
+              console.error('Error fetching menu items:', textStatus, errorThrown);
             }
           });
         }
+      
+        fetchMenuItems();
+      
+        // Add event listener for quantity change and calculate total cost directly
+        $('#quantity').change(function() {
+          const selectedPrice = parseFloat($('#menu_item_price').val() || 0); // Get price (default to 0 if not set)
+          const quantity = parseInt($(this).val() || 0); // Get quantity (default to 0 if not set)
+          const totalPrice = selectedPrice * quantity;
+      
+          $('#total_price').val(totalPrice.toFixed(2)); // Set total price with 2 decimal places
+        });
+      
+      });
+
+        // Add event listener for "Add to Order" button
+      $('#add_item_to_booking_btn').click(function(event) {
+        event.preventDefault(); // Prevent default form submission
+        roomTypeSelect
+        const booking_id = $('#roomTypeSelect').val()
+        console.log(booking_id)
+        const selectedItemId = $('#menu_itemSelect').val();
+        const quantity = parseInt($('#quantity').val() || 0);
+        const totalPrice = parseFloat($('#total_price').val() || 0);
+        
+
+        if (!selectedItemId) {
+          alert('Please select a menu item.');
+          return;
+        }
+
+        if (quantity <= 0) {
+          alert('Please enter a valid quantity (positive integer).');
+          return;
+        }
+
+        const data = {
+          'menu_item': selectedItemId,
+          'quantity': quantity,
+          'total_price': totalPrice,
+          'room_id': booking_id, 
+        };
+
+        
+        const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+        $.ajax({
+         url: "/restaurant/create-order-item/",
+          type: 'POST',
+          data: data,
+          dataType: 'json',
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader('X-CSRFToken', csrfToken);
+          },
+          success: function(response) {
+            if (response.success) {
+              // Item added successfully
+              console.log('Item added to booking:', response.item);
+              alert('Item added successfully!');
+              window.location.reload()
+              $('#create_order_modal').modal('show');
+              
+            } else {
+              alert('Error adding item: ' + response.error);
+            }
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            console.error('Error adding item:', textStatus, errorThrown);
+            alert('An error occurred. Please try again later.');
+          }
+        });
+      });
     </script>
 
-      <script>
-        $(document).ready(function() {
-            fetchMenuItems()
-
-            const bookingSelect = $('#roomTypeSelect');
-            const itemSelect = $('#itemSelect_2');
-            const add_item_link = $('#add_item_link');
-            const add_item_form = $('#add_item_form');
-            const total_price = $('#total_price');
-            const item_price = $('#item_price')
-
-          
-            // Update Total Cost on Quantity Change
-            add_item_form.find('input[name="quantity"]').change(function() {
-                const quantity = $(this).val();
-                const selectedItemPrice = parseFloat($('#itemSelect_2').val()); // Get price from selected option value
-                const totalCost = quantity * selectedItemPrice;
-                total_price.val(totalCost);
-              });
-            
-          
-            // Handle "Add to Order" form submission
-            add_item_form.submit(function(event) {
-              event.preventDefault(); // Prevent default form submission
-          
-              const bookingId = bookingSelect.val();
-              const itemId = itemSelect.val();
-              const quantity = add_item_form.find('input[name="quantity"]').val();
-                
-              if (!bookingId || !itemId || !quantity) {
-                alert('Please select a booking, menu item, and quantity.');
-                return;
-              }
-          
-              // Replace with your actual API endpoint URL
-              const url = `/restaurant/api/bookings/${bookingId}/items/`;
-              const csrftoken = $('input[name="csrfmiddlewaretoken"]').val();
-
-
-            });
-
-            function fetchMenuItems() {
-                $.ajax({
-                  url: '/restaurant/api/menu-items/',
-                  dataType: 'json',
-                  success: function(item_data) {
-                    const itemSelect_2 = $('#itemSelect_2');
-    
-                    itemSelect_2.empty(); // Clear existing options
-                    itemSelect_2.append($('<option value="">-- Select Items --</option>'));
-                    item_data.forEach(function(data) {
-                        const hiddenRateInput = $('<input type="hidden" id="item_price" value="'+ data.price +'">');
-                        const itemPrice = data.price
-                        itemSelect_2.append($('<option value="' + data.price + '">' + data.id + ' - ' + data.price + '</option>').append(hiddenRateInput));
-                        
-                      });
-    
-                  }
-                });
-              }
-
-        });
-
-      </script>
-
-    
 {% endblock %}

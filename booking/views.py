@@ -5,9 +5,10 @@ from django.db.models import Count  # Import Count for room count annotation
 from django.db.models import Q
 # Create your views here.
 from django.http import JsonResponse
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 from django.shortcuts import redirect, get_object_or_404
+
 
 def room_types_list(request):
   """API endpoint to retrieve all room types."""
@@ -136,7 +137,54 @@ def booking_details(request, pk):
     }
     return render(request, 'booking/booking_details.html', context)
 
+def add_new_booking(request):
+    if request.method == 'POST':
+       room_type_id = request.POST.get('room_type_id')
+       room_id = request.POST.get('room_id')
+       check_in = request.POST.get('check_in')
+       check_out = request.POST.get('check_out')
+       amount_to_pay = request.POST.get('amount_to_pay')
+       amount_paid = request.POST.get('amount_paid')
 
+       firstname = request.POST.get('firstname')
+       lastname = request.POST.get('lastname')
+       email = request.POST.get('email')
+       phone_number = request.POST.get('phone_number')
+       address = request.POST.get('address')
+       guest, created = Guest.objects.get_or_create(
+          email=email,  # Use unique field like email
+          defaults={
+              'firstname': firstname,
+              'lastname': lastname,
+              'phone_number': phone_number,
+              'address': address,
+          }
+        )
+       #guest = Guest.objects.create(firstname=firstname, lastname=lastname, email=email, phone_number=phone_number, address=address)
+       guest.save()
+
+       room_type = RoomType.objects.get(id=room_type_id)
+       room = Room.objects.get(id=room_id)
+
+       booking = Booking.objects.create(
+          #room_type=room_type, 
+          room=room, 
+          check_in=check_in, 
+          check_out=check_out, 
+          amount_to_pay=amount_to_pay, 
+          amount_paid=amount_paid, 
+          guest=guest
+        )
+        
+       room.status = 'occupied'
+       room.save()
+       booking.save()
+       
+       return redirect('booking:booking')
+       
+
+
+   
     
 def reservation(request):
     reservations = Reservation.objects.all()
@@ -176,3 +224,48 @@ def guest_profile(request, pk):
         'booking': booking
     }
     return render(request, 'booking/guest_profile.html', context)
+
+
+
+def reservations_test(request):
+  # Fetch all active reservations
+  reservations = Reservation.objects.filter(is_active=True)
+
+  # List to store unavailable dates
+  unavailable_dates = []
+
+  for reservation in reservations:
+      try:
+          reserved_room = ReservedRoom.objects.get(reservation=reservation)
+          room = reserved_room.room
+          # Add unavailable dates for this reservation to the list
+          unavailable_dates.extend(get_unavailable_dates(reservation.check_in, reservation.check_out))
+      except ReservedRoom.DoesNotExist:
+          # Handle missing room case (optional)
+          pass
+      except ReservedRoom.MultipleObjectsReturned:
+          # Handle multiple rooms case (log error, display message, etc.)
+          print(f"WARNING: Multiple ReservedRoom objects found for reservation {reservation.id}")
+          pass
+
+  context = {'reservations': reservations, 'unavailable_dates': unavailable_dates}
+  return render(request, 'booking/test.html', context)
+
+def get_unavailable_dates(check_in, check_out):
+  # Convert check_in and check_out to date objects
+  check_in_str = check_in.strftime('%Y-%m-%d')
+  check_out_str = check_out.strftime('%Y-%m-%d')
+
+  # Use strptime to convert strings to date objects
+  start_date = datetime.strptime(check_in_str, '%Y-%m-%d').date()
+  end_date = datetime.strptime(check_out_str, '%Y-%m-%d').date()
+
+
+  # Create a list to store unavailable dates
+  unavailable_dates = []
+  current_date = start_date
+  while current_date <= end_date:
+      unavailable_dates.append(current_date)
+      current_date += timedelta(days=1)
+
+  return unavailable_dates
