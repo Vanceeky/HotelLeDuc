@@ -584,14 +584,14 @@
   
     function fetchRoomTypes() {
       $.ajax({
-        url: '/frontdesk/api/room-types/', // Replace with your actual API endpoint URL
+        url: '/frontdesk/api/room-types/', 
         dataType: 'json',
         success: function(data) {
           const roomTypeSelect = $('#roomTypeSelect');
           roomTypeSelect.empty(); // Clear existing options
           roomTypeSelect.append($('<option value="">-- Select Room Type --</option>'));
           data.forEach(function(roomType) {
-            const roomRate = roomType.rate_per_night; // Adjust property name if different
+            const roomRate = roomType.rate_per_night; 
            
         // Create hidden input field for room rate
             const hiddenRateInput = $('<input type="hidden" id="roomRate_' + roomType.id + '" value="'+ roomRate +'">');
@@ -608,7 +608,7 @@
   
     function fetchAvailableRooms(roomTypeId) {
       $.ajax({
-        url: '/frontdesk/api/available-rooms/' + roomTypeId + '/', // Replace with your actual API endpoint URL with room type ID
+        url: '/frontdesk/api/available-rooms/' + roomTypeId + '/', 
         dataType: 'json',
         success: function(data) {
           const availableRoomsList = $('#availableRoomsList');

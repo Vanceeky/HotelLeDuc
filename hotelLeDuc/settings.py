@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'home.apps.HomeConfig',
     'booking.apps.BookingConfig',
     'restaurant.apps.RestaurantConfig',
+    'billing.apps.BillingConfig',
 
 ]
 

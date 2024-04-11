@@ -34,6 +34,15 @@ def orders(request):
     }
     return render(request, 'restaurant/orders.html', context)
 
+def generate_invoice(request, pk):
+    orders_list = Order.objects.get(id = pk)
+    context = {
+       'order': orders_list,
+       'order_list': orders_list.items.all()
+    }
+
+    return render(request, 'home/test_invoice.html', context)
+
 
 
 def items_for_room(request, room_id):

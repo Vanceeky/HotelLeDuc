@@ -125,7 +125,7 @@
 
                   <td class="text-center">
                     
-                    <button class="btn btn-link text-dark text-sm mb-0 px-0 ms-2"><i class="fas fa-file-pdf text-lg me-1" aria-hidden="true"></i> PDF</button>
+                    <a href="{% url 'restaurant:generate-invoice' order.id %}" class="btn btn-link text-dark text-sm mb-0 px-0 ms-2"><i class="fas fa-file-pdf text-lg me-1" aria-hidden="true"></i> PDF</a>
                   </td>
 
                 </tr>

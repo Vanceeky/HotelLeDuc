@@ -137,6 +137,19 @@ def booking_details(request, pk):
     }
     return render(request, 'booking/booking_details.html', context)
 
+
+
+
+def generate_invoice_booking(request, pk):
+    booking = Booking.objects.get(id =pk )
+    orders_list = Order.objects.get(booking = booking)
+    context = {
+       'booking': booking,
+       'order': orders_list,
+       'order_list': orders_list.items.all()
+    }
+    return render(request, 'booking/invoice.html', context)
+
 def add_new_booking(request):
     if request.method == 'POST':
        room_type_id = request.POST.get('room_type_id')
@@ -269,3 +282,6 @@ def get_unavailable_dates(check_in, check_out):
       current_date += timedelta(days=1)
 
   return unavailable_dates
+
+
+
