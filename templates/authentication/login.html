@@ -72,21 +72,26 @@
             <div class="card-header text-center pt-4">
               <h5>Sign in</h5>
               <p class="text-sm font-weight-bold text-secondary text-border d-inline z-index-2 bg-white">
-                Enter your email and password to sign in
+                {% if error %}
+                <p id="message" class="error">{{ error }}</p>  
+                  {% else %}
+                <p>Enter your email and password to sign in</p>
+                {% endif %}
             </p>
             </div>
 
             <div class="card-body">
-              <form role="form">
+              <form role="form" action="{% url 'authentication:login' %}" method="POST">
+                {% csrf_token %}
                 <div class="mb-3">
-                  <input type="email" class="form-control" placeholder="Email" aria-label="Email">
+                  <input type="text" class="form-control" name="username" placeholder="Username" aria-label="Email">
                 </div>
                 <div class="mb-3">
-                  <input type="password" class="form-control" placeholder="Password" aria-label="Password">
+                  <input type="password" class="form-control" name="password" placeholder="Password" aria-label="Password">
                 </div>
 
                 <div class="text-center">
-                  <button type="button" class="btn bg-gradient-dark w-100 my-4 mb-2">Sign up</button>
+                  <button type="submit" class="btn bg-gradient-dark w-100 my-4 mb-2">Login</button>
                 </div>
                 <p class="text-sm mt-3 mb-0">Forgotten your password? <a href="javascript:;" class="text-dark font-weight-bolder">Click here!</a></p>
               </form>
