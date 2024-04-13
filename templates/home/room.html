@@ -69,6 +69,57 @@
             <div class="mt-n8 mt-md-n9 text-center">
               <img class="avatar avatar-xxl shadow-xl position-relative z-index-2" src="/static/assets/img/logo.png" alt="bruce" loading="lazy">
             </div>
+
+            <div class="card">
+              <div class="card-body">
+                <h5 class="mb-4">Room Details</h5>
+                <div class="row">
+
+                  <div class="col-xl-5 col-lg-6 text-center">
+                    <!-- Display the first image -->
+                    <img class="w-100 border-radius-lg shadow-lg mx-auto" src="{{ room_images.0.image.url }}" alt="{{ room_images.0.image.name }}">
+                
+                    <div class="my-gallery d-flex mt-4 pt-2" itemscope="">
+                        <!-- Iterate over remaining images -->
+                        {% for image in room_images|slice:"1:" %}
+                        <figure class="ms-2 me-3">
+                            <img class="w-100 min-height-100 max-height-100 border-radius-lg shadow" src="{{ image.image.url }}" alt="{{ image.image.name }}">
+                        </figure>
+                        {% endfor %}
+                    </div>
+                  </div>
+
+                  <div class="col-lg-5 mx-auto">
+                    <h3 class="mt-lg-0 mt-4">{{ room_slug.name }}</h3>
+                    <div class="rating">
+                      <i class="fas fa-star" aria-hidden="true"></i>
+                      <i class="fas fa-star" aria-hidden="true"></i>
+                      <i class="fas fa-star" aria-hidden="true"></i>
+                      <i class="fas fa-star" aria-hidden="true"></i>
+                      <i class="fas fa-star-half-alt" aria-hidden="true"></i>
+                    </div>
+                    <br>
+                    <h6 class="mb-0 mt-3">Room rate</h6>
+                    <h5>₱ {{ room_slug.rate_per_night }} / night</h5>
+                    <br>
+                    <label class="mt-4">Description</label>
+                    <ul>
+                      <li>{{ room_slug.description }}</li>
+                      <li>All rooms are inclusive of Free WIFI and Swimming Pool use.</li>
+                      <li>Good for {{ room_slug.max_occupancy }} people(s)</li>
+                    </ul>
+
+                    <div class="row mt-4">
+                      <div class="col-lg-5">
+                        <button class="btn btn-info mb-0 mt-lg-auto w-100" type="button" name="button">Make reservation</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <!--
             <div class="row py-5">
               <div class="col-lg-7 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mx-auto">
                 <div class="d-flex justify-content-between align-items-center mb-2">
@@ -101,6 +152,7 @@
               </div>
               
             </div>
+            -->
           </div>
         </div>
       </div>
@@ -110,6 +162,8 @@
 
     <section class="py-3" id="room">
       <div class="container">
+
+
         <div class="row">
           <div class="col">
             <div class="card box-shadow-xl overflow-hidden mb-5">
@@ -154,13 +208,13 @@
                                     <div class="card card-plain">
                                       <div class="card-header pb-0 text-left">
                                         <h3 class="font-weight-bolder text-info text-gradient">Welcome back</h3>
-                                        <p class="mb-0">Enter your email and password to sign in</p>
+                                        <p class="mb-0">Please provide your information below</p>
                                       </div>
                                       <div class="card-body">
-                                          <input type="text" value="{{ room_slug.id}}" name="room_type" id="room_type">
+                                          <input type="hidden" value="{{ room_slug.id}}" name="room_type" id="room_type">
                                           <input type="hidden" value="{{ room_slug.rate_per_night}}" name="room_rate" id="room_rate">
                                           
-
+                                          {% csrf_token %}
                                         
                                           <div class="row">
                                             <div class="col-md-6">
@@ -495,8 +549,12 @@
   </script>
  {% endcomment %}
  
+
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+
+
 
 
 <script>
@@ -534,7 +592,7 @@
 
 
   <script src="/static/assets/js/plugins/bs-stepper.min.js"></script>
-  // BS-Stepper Ini
+  
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -543,37 +601,39 @@
   
   </script>
 
-{% comment %}   <script>
-    const nextButton = document.querySelector('.btn-round.bg-gradient-info'); // Select the "Next" button
-    const inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="phone"]'); // Select all text, email, and phone inputs
-    const checkbox = document.getElementById('rememberMe'); // Select the checkbox
-    
-    function checkForEmptyInputs() {
-      // Check if any input is empty
-      for (const input of inputs) {
-        if (input.value.trim() === '') {
-          return true; // If any input is empty, return true (disable button)
+  <script>
+        const nextButton = document.querySelector('.btn-round.bg-gradient-info'); // Select the "Next" button
+        const inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="phone"]'); // Select all text, email, and phone inputs
+        const checkbox = document.getElementById('rememberMe'); // Select the checkbox
+        
+        function checkForEmptyInputs() {
+          // Check if any input is empty
+          for (const input of inputs) {
+            if (input.value.trim() === '') {
+              return true; // If any input is empty, return true (disable button)
+            }
+          }
+          // Check if checkbox is checked
+          return !checkbox.checked; // If checkbox is not checked, return true (disable button)
         }
-      }
-      // Check if checkbox is checked
-      return !checkbox.checked; // If checkbox is not checked, return true (disable button)
-    }
-    
-    // Disable the button initially (optional)
-    nextButton.disabled = true;
-    
-    // Add event listener to any input change
-    inputs.forEach(input => input.addEventListener('change', () => {
-      nextButton.disabled = checkForEmptyInputs();
-    }));
-    
-    // Add event listener to checkbox change
-    checkbox.addEventListener('change', () => {
-      nextButton.disabled = checkForEmptyInputs();
-    });
-    
+        
+        
+        nextButton.disabled = true;
+        
+        // Add event listener to any input change
+        inputs.forEach(input => input.addEventListener('change', () => {
+          nextButton.disabled = checkForEmptyInputs();
+        }));
+        
+        
+        checkbox.addEventListener('change', () => {
+          nextButton.disabled = checkForEmptyInputs();
+        });
+        
 
-  </script> {% endcomment %}
+  </script>
+
+
 
   <script>
     const today = new Date();

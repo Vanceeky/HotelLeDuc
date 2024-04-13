@@ -1,10 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import *
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 # Create your views here.
 from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib import messages
 
 def dashboard(request):
     return render(request, 'restaurant/dashboard.html')
@@ -12,11 +13,38 @@ def dashboard(request):
 def menu(request):
     menu_items = MenuItem.objects.all()
     categories = menu_items.values_list('category', flat=True).distinct()  # Get distinct categories
+    today_special = menu_items.filter(today_special=True).get()
+    print(today_special.name)
+
     context = {
         'menu_items': menu_items,
-        'categories': categories,  # Add categories to context
+        'categories': categories,
+        'today_special': today_special  # Add categories to context
     }
     return render(request, 'restaurant/menu.html', context)
+
+def add_new_menu(request):
+  if request.method == 'POST':
+       name = request.POST.get('name')
+       price = request.POST.get('price')
+       category = request.POST.get('category')
+       description = request.POST.get('description')
+       serving = request.POST.get('serving')
+       images = request.FILES.get('images')
+       new_item = MenuItem(name=name, price=price, description=description, category = category, serves = serving, images=images)
+       new_item.save()
+
+  messages.success(request, f'{name} successfully added to the Menu!')
+  return redirect('restaurant:menu')
+
+
+def ordered_items(request):
+   items = OrderItem.objects.all()
+   context = {
+       'items': items
+   }
+   return render(request, 'restaurant/ordered_items.html', context)
+
 
 def orders(request):
     orders_list = Order.objects.select_related('booking__guest').prefetch_related('items').all()
@@ -152,7 +180,8 @@ def add_item_to_booking(request, booking_id, item_id):
 
     # Retrieve the Booking and MenuItem objects
     try:
-        booking = Booking.objects.get(pk=booking_id)
+        booking = Booking.objects.get(pk=booking_id, status = 'checked-in')
+        
         item = MenuItem.objects.get(pk=item_id)
     except Booking.DoesNotExist:
         return JsonResponse({'error': 'Booking not found'})
@@ -273,26 +302,26 @@ def create_order_item_ajax(request):
       booking = Booking.objects.get(id=booking_id)
       existing_order = booking.order
 
-      # If order exists, add the new OrderItem
+     
       if existing_order:
         order_item = OrderItem.objects.create(
             menu_item=menu_item,
             quantity=quantity,
         )
         existing_order.items.add(order_item)
-        existing_order.save()  # Recalculate total price on save
+        existing_order.save() 
 
-      # If no order exists, create a new order and link it to the booking
+      
       else:
         order = Order.objects.create(booking=booking)
         order_item = OrderItem.objects.create(
-            order=order,  # Link to the newly created order
+            order=order,  
             menu_item=menu_item,
             quantity=quantity,
         )
         order.items.add(order_item)
-        order.save()  # Recalculate total price on save
-        booking.order = order  # Link order to the booking
+        order.save() 
+        booking.order = order  
         booking.save()
 
       return JsonResponse({'success': True, 'order_item': str(order_item)})
@@ -301,3 +330,32 @@ def create_order_item_ajax(request):
       return JsonResponse({'error': 'Invalid booking ID.'}, status=400)
 
   return JsonResponse({'error': 'Method not allowed (test required).'}, status=405)
+
+
+def prepare_order_item(request, order_item_id):
+    order_item = get_object_or_404(OrderItem, id=order_item_id)
+    order_item.status = 'preparing'
+    order_item.save()
+    messages.success(request, f"Order item marked as preparing.")
+    return redirect('restaurant:ordered-items')
+
+def complete_order_item(request, order_item_id):
+    order_item = get_object_or_404(OrderItem, id=order_item_id)
+
+    # Mark the order item as prepared
+    order_item.status = 'prepared'
+    messages.success(request, f"Order item marked as prepared.")
+    order_item.save()
+
+    # Update order status if all order items are prepared
+    order = order_item.order
+    all_items_prepared = all(item.status == 'prepared' for item in order.items.all())
+    if all_items_prepared:
+        order.status = 'prepared'
+        order.save()
+        messages.success(request, f"Order #{order.pk} marked as delivered!")
+    else:
+        messages.info(request, f"Order item marked as prepared. Update order status when all items are prepared.")
+
+    return redirect('restaurant:ordered-items')
+

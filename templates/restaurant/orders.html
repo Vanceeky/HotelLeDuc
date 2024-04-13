@@ -150,7 +150,12 @@
                 <select class="form-control" id="roomTypeSelect" name="room">
                     <option value="">-- Select Room --</option>
                     {% for room in bookings %}
+                    {% if room.status == 'checked-in' %}
                     <option value="{{ room.id }}" class="text-capitalize"> {{ room.room.room_type }} - Room #{{ room.room.room_number }} - {{ room.guest}}</option>
+                    {% else %}
+
+                    {% endif %}
+
                     {% endfor %}
                 </select>
               </div>

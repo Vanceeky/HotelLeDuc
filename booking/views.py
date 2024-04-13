@@ -5,10 +5,12 @@ from django.db.models import Count  # Import Count for room count annotation
 from django.db.models import Q
 # Create your views here.
 from django.http import JsonResponse
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 import json
 from django.shortcuts import redirect, get_object_or_404
-
+import decimal
+from django.http import HttpResponse, JsonResponse
+from django.contrib import messages
 
 def room_types_list(request):
   """API endpoint to retrieve all room types."""
@@ -43,38 +45,35 @@ def available_room_list(request, room_type_pk):
       'id': room.id,
       'room_number': room.room_number,
       'name': room.name,
-      'description': room.description,
       'room_type': room.room_type.name,  # Include room type name
       # Add image URL if images field is used
       # 'image_url': room.images.url if room.images else None,
     })
   return JsonResponse(data, safe=False)
 
-#def confirm_reservation(request, pk):
-  reservation = Reservation.objects.get(id = pk)
-  
-  # Check room availability using the reservation dates
-  available_room = Room.objects.filter(status='available').first()
-
-  if available_room:
-    # Assign room and update reservation status
-    reserved_room = ReservedRoom.objects.create(
-        reservation=reservation,
-        room=available_room,
-    )
-    reservation.status = 'confirmed'
-    reservation.room = available_room
-    reservation.save()
 
 
-    
-    # Success message (consider using Django messages framework)
-    message = "Room assigned successfully and reservation confirmed!"
-  else:
-    # No available room found
-    message = "No available room found for the selected dates. Please try a different room or dates."
+def get_guest_reservation(request, pk):
+    reservation = Reservation.objects.get(id=pk, status="confirmed")
+    data = {
+       # 'room_type': str(reservation.room_type),
+        'room': f"{reservation.room_type} - Room #{ reservation.room.room_number} - ({reservation.room.room_type.rate_per_night})",
+        'room_id': reservation.room.id,
+        'guest_id': reservation.guest.id,
+        'guest_name': f"{reservation.guest.firstname} {reservation.guest.lastname}",
+        'room_number': reservation.room.room_number,
+        'room_rate': reservation.room.room_type.rate_per_night,
+        'check_in': reservation.check_in,
+        'check_out': reservation.check_out,
+        'amount_to_pay': reservation.total_amount,
+        'amount_paid': reservation.amount_paid,
+        'status': reservation.status,
+    }
+    print(data)
+    return JsonResponse(data, safe=False)
 
-  return redirect('booking:reservation')
+
+
 
 def confirm_reservation(request, pk):
   reservation = Reservation.objects.get(id = pk)
@@ -118,9 +117,31 @@ def dashboard(request):
 
 def booking(request):
     bookings = Booking.objects.all()
+
+    today = date.today()
+    tomorrow = today + timedelta(days=1)
+
+  # Today's Check-Ins
+    today_reservations = Reservation.objects.filter(
+        check_in=today,  # Check-in on today only
+        status='confirmed'
+    ).order_by('check_in')
+
+    # Tomorrow's Check-Ins
+    tomorrow_reservations = Reservation.objects.filter(
+        check_in=tomorrow,  # Check-in on tomorrow only
+        status='confirmed'
+    ).order_by('check_in')
+
     context = {
-        'bookings': bookings
+        'bookings': bookings,
+        'today_reservations': today_reservations,
+        'tomorrow_reservations': tomorrow_reservations,
+        'today': today,
     }
+
+    print(today)
+    print(tomorrow)
     return render(request, 'booking/booking.html', context)
 
 def booking_details(request, pk):
@@ -141,14 +162,19 @@ def booking_details(request, pk):
 
 
 def generate_invoice_booking(request, pk):
-    booking = Booking.objects.get(id =pk )
-    orders_list = Order.objects.get(booking = booking)
-    context = {
-       'booking': booking,
-       'order': orders_list,
-       'order_list': orders_list.items.all()
-    }
-    return render(request, 'booking/invoice.html', context)
+  try:
+    booking = Booking.objects.get(id=pk)
+    orders_list = Order.objects.filter(booking=booking).first()  # Get first order or None
+  except Booking.DoesNotExist:
+    # Handle case where booking doesn't exist (optional)
+    return render(request, 'booking/invoice_error.html', {'message': 'Booking not found'})
+
+  context = {
+    'booking': booking,
+    'order': orders_list,  # Can be None if no order exists
+    'order_list': orders_list.items.all() if orders_list else [],  # Empty list if no order
+  }
+  return render(request, 'booking/invoice.html', context)
 
 def add_new_booking(request):
     if request.method == 'POST':
@@ -192,19 +218,95 @@ def add_new_booking(request):
        room.status = 'occupied'
        room.save()
        booking.save()
-       
+       messages.success(request, 'Guest successfully added to the booking!')
        return redirect('booking:booking')
        
+def add_reservation_to_booking(request):
+    if request.method == 'POST':
+        room_id = request.POST.get('reserved_room_id')
+        guest_id = request.POST.get('guest_id_reserved')
 
+        check_in = request.POST.get('check_in_reserved')
+        check_out = request.POST.get('check_out_reserved')
 
+        amount_to_pay = request.POST.get('amount_to_pay_reserved')
+        amount_paid = request.POST.get('amount_paid_reserved')
+
+        print(f"Amount paid: {amount_paid}")
+        print(f"Check in: {check_in}")
+
+        if request.POST.get('balance_reserved'):
+            balance = request.POST.get('balance_reserved')
+            
+            balance = decimal.Decimal(balance)
+            amount_paid = decimal.Decimal(amount_paid)
+            print(f"Balance: {balance}")
+            amount_paid += balance
+            booking = Booking.objects.create(
+                room_id=room_id,
+                guest_id=guest_id,
+                check_in=check_in,
+                check_out=check_out,
+                amount_to_pay=amount_to_pay,
+                amount_paid=amount_paid
+            )
+            booking.save()
+            messages.success(request, 'Guest successfully added to the booking!')
+            return redirect('booking:booking-details', pk=booking.id)
+        
+        else:
+            booking = Booking.objects.create(
+                room_id=room_id,
+                guest_id=guest_id,
+                check_in=check_in,
+                check_out=check_out,
+                amount_to_pay=amount_to_pay,
+                amount_paid=amount_paid
+            )
+            booking.save()
+            messages.success(request, 'Guest successfully added to the booking!')
+            return redirect('booking:booking-details', pk=booking.id)
+        
+    return redirect('booking:booking')
    
-    
-def reservation(request):
-    reservations = Reservation.objects.all()
-    context = {
-        'reservations': reservations
-    }
-    return render(request, 'booking/reservation.html', context)
+
+def pay_balance(request, pk):
+  if request.method == 'POST':
+    booking_id = request.POST.get('booking_id')
+    balance_str = request.POST.get('balance')
+
+    try:
+      balance = decimal.Decimal(balance_str)  # Convert string to decimal
+    except ValueError:
+      balance = decimal.Decimal('0.0')  # Set balance to 0.0 in case of conversion error
+
+    booking = Booking.objects.get(id=booking_id)
+    amount_paid = booking.amount_paid
+    booking.status = 'checked-out'
+
+    # Check if balance is a decimal before adding
+    if isinstance(balance, decimal.Decimal):
+      amount_paid += balance
+
+    booking.amount_paid = amount_paid
+    room = booking.room
+    room.status = 'cleaning'
+    room.save()
+    booking.save()
+
+    return redirect('booking:generate-booking-invoice', pk=booking_id)
+   
+def checkout_guest(request, pk):
+  booking = Booking.objects.get(id=pk)
+  room = booking.room
+  booking.status = 'checked-out'
+  room.status = 'cleaning'
+  room.save()
+  booking.save()
+
+  return redirect('booking:generate-booking-invoice', booking.id)
+
+
 
 def rooms(request):
     """Fetches detailed room type information and displays it with associated rooms."""
@@ -239,6 +341,27 @@ def guest_profile(request, pk):
     return render(request, 'booking/guest_profile.html', context)
 
 
+def reservation(request):
+    reservations = Reservation.objects.all()
+      # List to store unavailable dates
+    unavailable_dates = []
+    for reservation in reservations:
+      try:
+          reserved_room = ReservedRoom.objects.get(reservation=reservation)
+          room = reserved_room.room
+          # Add unavailable dates for this reservation to the list
+          unavailable_dates.extend(get_unavailable_dates(reservation.check_in, reservation.check_out))
+      except ReservedRoom.DoesNotExist:
+          # Handle missing room case (optional)
+          pass
+      except ReservedRoom.MultipleObjectsReturned:
+          # Handle multiple rooms case (log error, display message, etc.)
+          print(f"WARNING: Multiple ReservedRoom objects found for reservation {reservation.id}")
+          pass
+    context = {
+        'reservations': reservations
+    }
+    return render(request, 'booking/reservation.html', context)
 
 def reservations_test(request):
   # Fetch all active reservations
@@ -264,6 +387,9 @@ def reservations_test(request):
   context = {'reservations': reservations, 'unavailable_dates': unavailable_dates}
   return render(request, 'booking/test.html', context)
 
+
+
+
 def get_unavailable_dates(check_in, check_out):
   # Convert check_in and check_out to date objects
   check_in_str = check_in.strftime('%Y-%m-%d')
@@ -284,4 +410,7 @@ def get_unavailable_dates(check_in, check_out):
   return unavailable_dates
 
 
+
+def function_hall(request):
+   return render(request, 'booking/function_hall.html')
 

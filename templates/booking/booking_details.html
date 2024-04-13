@@ -14,6 +14,15 @@
 {% block content %}
 
     <div class="container-fluid py-4">
+
+      {% if messages %}
+      <div class="alert alert-success" role="alert">
+        {% for message in messages %}
+        <strong>{{ message }}!</strong>
+        {% endfor %}
+      </div>
+      {% endif %}
+      
         <div class="row">
             <div class="col-md-7 mt-4">
                 <div class="card">
@@ -40,9 +49,13 @@
                             <span class="mb-2 text-md">Status: <span class="badge badge-pill badge-md bg-gradient-warning">{{ booking.status }}</span></span>
                           </div>
                           <div class="ms-auto text-end">
+                            {% if booking.status == 'checked-out' %}
+
+                            {% elif booking.status == 'checked-in' %}
                             <a type="button" class="btn btn-link text-dark p-0 mb-0" href="javascript:;" data-bs-toggle="modal" data-bs-target="#modal-checkout"  data-bs-placement="top" data-animation="true" aria-label="Confirm" data-bs-original-title="Checkout Guest"><i class="fa fa-check-circle text-dark me-2" aria-hidden="true"></i></a>
-                            <a class="btn btn-link text-dark p-0 mb-0" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="top" data-animation="true" aria-label="Edit" data-bs-original-title="Edit"><i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i></a>
-                            <a class="btn btn-link text-dark p-0 mb-0" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="top" data-animation="true" aria-label="Cancel" data-bs-original-title="Cancel"><i class="fas fa-trash-alt text-dark me-2" aria-hidden="true"></i></a>
+                            <a class="btn btn-link text-dark p-0 mb-0" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="top" data-animation="true" aria-label="Edit" data-bs-original-title="Extend Booking"><i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i></a>
+                            
+                            {% endif %}
                           </div>
                         </li>
                       </ul>
@@ -93,7 +106,7 @@
 
                       </ul>
 
-                      <span class="mb-2 text-md d-flex justify-content-end">Total Balance: <span class="text-dark ms-sm-2 font-weight-bold">₱ {{ order.total_price}} </span></span>
+                      <span class="mb-2 text-md d-flex justify-content-end">Amount paid: <span class="text-dark ms-sm-2 font-weight-bold">₱ {{ booking.amount_paid }} </span></span>
                       
                     </div>
                   </div>
@@ -176,78 +189,85 @@
     <div class="col-md-4">
       <div class="modal fade" id="modal-checkout" tabindex="-1" role="dialog" aria-labelledby="modal-notification" aria-hidden="true">
         <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h6 class="modal-title" id="modal-title-notification">Check Out Guest</h6>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">×</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <div class="py-3 text-center">
-                <i class="ni ni-bell-55 ni-3x"></i>
-                <h4 class="text-gradient text-danger mt-4">Billing Summary</h4>
-                  <div class="row">
-                    <div class="col-12">
-                      <div class="d-flex justify-content-between text-info text-gradient">
-                        <span class="mb-2 text-sm">
-                        Room cost:
-                        </span>
-                        <span class="text-dark font-weight-bold ms-2">₱ <span id="amount_to_pay">{{ booking.amount_to_pay}}</span></span>
-                      </div>
 
-                      <div class="d-flex justify-content-between text-info text-gradient">
-                        <span class="text-sm">
-                        Additional Orders:
-                        </span>
-                        <span class="text-dark ms-2 font-weight-bold">
-                          {% if order %}
-                          ₱ <span id="order_total">{{ order.total_price}}</span>
-                          {% else %}
-                            <span id="order_total">0</span>
-                          {% endif %}
-                        </span>
-                      </div>
-
-
-                      <div class="d-flex justify-content-between text-info text-gradient">
-                        <span class="mb-2 text-sm">
-                        Amount paid:
-                        </span>
-                        <span class="text-dark ms-2 font-weight-bold">₱ <span id="amount_paid">{{ booking.amount_paid }}</span></span>
-                      </div>
-
-
-
-                      <div class="d-flex justify-content-between text-success text-gradient">
-                        <span class="mb-2 text-lg">
-                        Total cost of stay:
-                        </span>
-                        <span class="text-dark text-lg ms-2 font-weight-bold"><span id="total_cost_of_stay">0</span></span>
-                      </div>
-                      <div class="d-flex justify-content-between text-danger text-gradient">
-                        <span class="text-sm">
-                        Balance:
-                        </span>
-                        <span class="text-dark ms-2 font-weight-bold"><span id="balance"></span> </span>
-                      </div>
-                      <div class="form-group" id="balance_input">
-                        <div class="input-group">
-                          <span class="input-group-text">$</span>
-                          <input type="text" class="form-control"  aria-label="Amount (to the nearest dollar)" >
-                          <span class="input-group-text">.00</span>
-                        </div>
-                    </div>
-                    </div>
-                  </div>
+            <div class="modal-content">
+              <div class="modal-header">
+                <h6 class="modal-title" id="modal-title-notification">Check Out Guest</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
               </div>
+              <form action="{% url 'booking:pay-balance' booking.id %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="booking_id" value="{{ booking.id }}">
+                <div class="modal-body">
+                  <div class="py-3 text-center">
+                    <i class="ni ni-bell-55 ni-3x"></i>
+                    <h4 class="text-gradient text-danger mt-4">Billing Summary</h4>
+                      <div class="row">
+                        <div class="col-12">
+                          <div class="d-flex justify-content-between text-info text-gradient">
+                            <span class="mb-2 text-sm">
+                            Room cost:
+                            </span>
+                            <span class="text-dark font-weight-bold ms-2">₱ <span id="amount_to_pay">{{ booking.amount_to_pay}}</span></span>
+                          </div>
+
+                          <div class="d-flex justify-content-between text-info text-gradient">
+                            <span class="text-sm">
+                            Additional Orders:
+                            </span>
+                            <span class="text-dark ms-2 font-weight-bold">
+                              {% if order %}
+                              ₱ <span id="order_total">{{ order.total_price}}</span>
+                              {% else %}
+                                <span id="order_total">0</span>
+                              {% endif %}
+                            </span>
+                          </div>
+
+
+                          <div class="d-flex justify-content-between text-info text-gradient">
+                            <span class="mb-2 text-sm">
+                            Amount paid:
+                            </span>
+                            <span class="text-dark ms-2 font-weight-bold">₱ <span id="amount_paid">{{ booking.amount_paid }}</span></span>
+                          </div>
+
+
+
+                          <div class="d-flex justify-content-between text-success text-gradient">
+                            <span class="mb-2 text-lg">
+                            Total cost of stay:
+                            </span>
+                            <span class="text-dark text-lg ms-2 font-weight-bold"><span id="total_cost_of_stay">0</span></span>
+                          </div>
+                          <div class="d-flex justify-content-between text-danger text-gradient">
+                            <span class="text-sm">
+                            Balance:
+                            </span>
+                            <span class="text-dark ms-2 font-weight-bold"><span id="balance"></span> </span>
+                          </div>
+                          <div class="form-group" id="balance_input">
+                            <div class="input-group">
+                              <span class="input-group-text">$</span>
+                              <input type="text" class="form-control" id="balance_input_field" name="balance" aria-label="Amount (to the nearest dollar)" >
+                              <span class="input-group-text">.00</span>
+                            </div>
+                        </div>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <a href="{% url 'booking:checkout-guest' booking.id %}" type="button" id="check_out_guest" class="btn btn-white">Checkout Guest</a>
+                  <button type="button" id="pay_balance_button" class="btn btn-white">Pay balance</button>
+                  <button type="submit" id="pay_balance_button_submit" class="btn btn-white">Checkout Guest</button>
+                  <button type="button" class="btn btn-link ml-auto" data-bs-dismiss="modal">Close</button>
+                </div>
+              </form>
             </div>
-            <div class="modal-footer">
-              <button type="button" id="check_out_guest" class="btn btn-white">Ok, Got it</button>
-              <button type="button" id="pay_balance_button" class="btn btn-white">Pay balance</button>
-              <button type="button" class="btn btn-link ml-auto" data-bs-dismiss="modal">Close</button>
-            </div>
-          </div>
+          
         </div>
       </div>
     </div>
@@ -294,7 +314,7 @@
   });
 </script> {% endcomment %}
 
-<script>
+{% comment %} <script>
   document.addEventListener('DOMContentLoaded', function() {
     const amountToPay = document.getElementById('amount_to_pay');
     const amountPaid = document.getElementById('amount_paid');
@@ -304,8 +324,9 @@
     const balanceInput = document.getElementById('balance_input');
     const checkOutGuestButton = document.getElementById('check_out_guest');
     const payBalanceButton = document.getElementById('pay_balance_button');
+    const payBalanceButtonSubmit = document.getElementById('pay_balance_button_submit');
   
-    // Handle potential errors and missing values
+   
     let amountToPayValue = 0;
     let amountPaidValue = 0;
     let orderTotalValue = 0;
@@ -313,14 +334,76 @@
     try {
       amountToPayValue = parseFloat(amountToPay.textContent.replace('₱ ', '')) || 0;
       amountPaidValue = parseFloat(amountPaid.textContent.replace('₱ ', '')) || 0;
-      orderTotalValue = parseFloat(orderTotal.textContent.replace(' ', '')) || 0; // Handle potential spaces in order_total
+      orderTotalValue = parseFloat(orderTotal.textContent.replace(' ', '')) || 0;
     } catch (error) {
       console.error("Error parsing values:", error);
-      // Handle parsing errors (optional: display an error message to the user)
+     
     }
   
-    // Calculate balance (considering order total as well)
-    const calculatedBalance = amountToPayValue - amountPaidValue - orderTotalValue;
+    // Calculate balance 
+    const calculated_balance = amountToPayValue + orderTotalValue;
+
+    //const calculatedBalance = amountToPayValue - amountPaidValue - orderTotalValue;
+    calculatedBalance = calculated_balance - amountPaidValue;
+    // Update balance and total cost displays
+    balance.textContent = `₱ ${calculatedBalance.toFixed(2)}`;
+    totalCost.textContent = `₱ ${(amountToPayValue + orderTotalValue).toFixed(2)}`;
+
+
+  
+    // Hide balance input initially
+    balanceInput.style.display = 'none';
+  
+    // Check initial balance and show button
+    if (calculatedBalance === 0) {
+      checkOutGuestButton.style.display = 'block';
+      payBalanceButton.style.display = 'none';
+      pay_balance_button_submit.style.display = 'none'
+    } else {
+      checkOutGuestButton.style.display = 'none';
+      payBalanceButton.style.display = 'block';
+      pay_balance_button_submit.style.display = 'none'
+    }
+  
+    // Event listener for pay balance button
+    payBalanceButton.addEventListener('click', function() {
+      balanceInput.style.display = 'block'; // Show balance input on click
+      pay_balance_button.style.display = 'none'
+      pay_balance_button_submit.style.display = "block"
+    });
+  });
+
+
+</script>
+ {% endcomment %}
+
+
+ <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const amountToPay = document.getElementById('amount_to_pay');
+    const amountPaid = document.getElementById('amount_paid');
+    const orderTotal = document.getElementById('order_total');
+    const balance = document.getElementById('balance');
+    const totalCost = document.getElementById('total_cost_of_stay');
+    const balanceInput = document.getElementById('balance_input');
+    const checkOutGuestButton = document.getElementById('check_out_guest');
+    const payBalanceButton = document.getElementById('pay_balance_button');
+    const payBalanceButtonSubmit = document.getElementById('pay_balance_button_submit');
+  
+    let amountToPayValue = 0;
+    let amountPaidValue = 0;
+    let orderTotalValue = 0;
+  
+    try {
+      amountToPayValue = parseFloat(amountToPay.textContent.replace('₱ ', '')) || 0;
+      amountPaidValue = parseFloat(amountPaid.textContent.replace('₱ ', '')) || 0;
+      orderTotalValue = parseFloat(orderTotal.textContent.replace(' ', '')) || 0;
+    } catch (error) {
+      console.error("Error parsing values:", error);
+    }
+  
+    // Calculate balance (similar to previous code)
+    const calculatedBalance = amountToPayValue + orderTotalValue - amountPaidValue;
   
     // Update balance and total cost displays
     balance.textContent = `₱ ${calculatedBalance.toFixed(2)}`;
@@ -329,23 +412,35 @@
     // Hide balance input initially
     balanceInput.style.display = 'none';
   
-    // Check initial balance and show appropriate button
+    // Check initial balance and show buttons
     if (calculatedBalance === 0) {
       checkOutGuestButton.style.display = 'block';
       payBalanceButton.style.display = 'none';
+      payBalanceButtonSubmit.style.display = 'none';
     } else {
       checkOutGuestButton.style.display = 'none';
       payBalanceButton.style.display = 'block';
+      payBalanceButtonSubmit.style.display = 'none';
     }
   
     // Event listener for pay balance button
     payBalanceButton.addEventListener('click', function() {
       balanceInput.style.display = 'block'; // Show balance input on click
+      payBalanceButton.style.display = 'none';
+      payBalanceButtonSubmit.style.display = 'block';
+    });
+  
+    // Improved validation on submit
+    payBalanceButtonSubmit.addEventListener('click', function(event) {
+      const balanceInputValue = parseFloat(document.getElementById('balance_input_field').value) || 0;
+  
+      // Check if balance input is lower than the balance
+      if (balanceInputValue < calculatedBalance) {
+        event.preventDefault(); // Prevent form submission
+        alert('Insufficient payment! The balance due is ₱' + calculatedBalance.toFixed(2) + '. Please enter a higher amount.');
+      }
     });
   });
-
-
-</script>
-
-
+  
+ </script>
 {% endblock %}

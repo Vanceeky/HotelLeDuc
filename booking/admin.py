@@ -1,20 +1,32 @@
 from django.contrib import admin
-from .models import RoomType, Room, Amenity, Reservation, Guest, Booking, ReservedRoom
+from .models import *
 
 
 # Customize the admin display for each model
 
 @admin.register(RoomType)
 class RoomTypeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'rate_per_night', 'description')  # Fields to display in the list view
+    list_display = ('id', 'name', 'rate_per_night', 'max_occupancy', 'description')  # Fields to display in the list view
     search_fields = ('name',)  # Fields to allow searching by
     prepopulated_fields = {'slug': ('name',)}  # Automatically generate slug from name (optional)
 
 @admin.register(Room)
 class RoomAdmin(admin.ModelAdmin):
-    list_display = ('id', 'room_number', 'room_type', 'name', 'max_occupancy', 'status')
+    list_display = ('id', 'room_number', 'room_type', 'name', 'status')
     search_fields = ('room_number', 'room_type__name')  # Search by room number and room type name
     list_filter = ('room_type', 'status',)  # Filter by room type and availability
+@admin.register(RoomImage)
+class RoomImageAdmin(admin.ModelAdmin):
+    list_display = ('id', 'room_type', 'image_thumbnail')
+    readonly_fields = ('image_thumbnail',)
+
+    def image_thumbnail(self, obj):
+        if obj.image:
+            return '<img src="{}" style="max-width: 200px; max-height: 200px;" />'.format(obj.image.url)
+        else:
+            return '(No image)'
+    image_thumbnail.allow_tags = True
+    image_thumbnail.short_description = 'Thumbnail'
 
 @admin.register(Amenity)
 class AmenityAdmin(admin.ModelAdmin):

@@ -322,6 +322,8 @@
     <!-- -------- START Features w/ pattern background & stats & rocket -------- -->
     <section class="pb-5 position-relative bg-gradient-dark mx-n3">
       <div class="container">
+
+        
         <div class="row">
           <div class="col-md-8 text-start mb-5 mt-5">
             <h3 class="text-white z-index-1 position-relative">Rooms and Amenities</h3>
@@ -329,26 +331,30 @@
           </div>
         </div>
         <div class="row">
-          {% for room in rooms %}
+          {% for room_info in room_types_with_images %}
           <div class="col-lg-6 col-12 mt-4">
-            <div class="card card-profile mt-4">
-              <div class="row">
-                <div class="col-lg-6 col-md-6 col-12 mt-n5">
-                  <a href="javascript:;">
-                    <div class="p-3 pe-md-0">
-                      <img class="w-100 border-radius-md shadow-lg" src="{{ room.images.url }}" alt="{{ room.name }}">
-                    </div>
-                  </a>
-                </div>
-                <div class="col-lg-6 col-md-6 col-12 my-auto">
-                  <div class="card-body ps-lg-0">
-                    <h5 class="mb-0"><a href="{% url 'home:room_detail' room.slug %}">{{ room.name }}</a></h5>
-                    <h6 class="text-info">₱{{ room.rate_per_night }} / night</h6>
-                    <p class="mb-0">{{ room.description|truncatechars:100 }}...</p>
+              <div class="card card-profile mt-4">
+                  <div class="row">
+                      <div class="col-lg-6 col-md-6 col-12 mt-n5">
+                          <a href="javascript:;">
+                              <div class="p-3 pe-md-0">
+                                  {% if room_info.room_images %}
+                                  <img class="w-100 border-radius-md shadow-lg" src="{{ room_info.room_images.0.image.url }}" alt="{{ room_info.room_type.name }}">
+                                  {% else %}
+                                  <p>No images available</p>
+                                  {% endif %}
+                              </div>
+                          </a>
+                      </div>
+                      <div class="col-lg-6 col-md-6 col-12 my-auto">
+                          <div class="card-body ps-lg-0">
+                              <h5 class="mb-0"><a href="{% url 'home:room_detail' room_info.room_type.slug %}">{{ room_info.room_type.name }}</a></h5>
+                              <h6 class="text-info">₱{{ room_info.room_type.rate_per_night }} / night</h6>
+                              <p class="mb-0">{{ room_info.room_type.description|truncatechars:100 }}...</p>
+                          </div>
+                      </div>
                   </div>
-                </div>
               </div>
-            </div>
           </div>
           {% endfor %}
 

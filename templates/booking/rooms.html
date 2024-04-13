@@ -40,6 +40,8 @@
 {% block content %}
 
     <div class="container-fluid py-4">
+
+
         <div class="row">
             <div class="col-md-8 mb-lg-0 mb-4">
                 <div class="card mt-4">
@@ -49,7 +51,7 @@
                         <h6 class="mb-0">Room Information</h6>
                       </div>
                       <div class="col-6 text-end">
-                        <a class="btn bg-gradient-info mb-0" href="javascript:;"><i class="fas fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Add New Booking</a>
+                        <a class="btn bg-gradient-info mb-0" href="javascript:;"><i class="fas fa-plus" aria-hidden="true"></i></a>
                       </div>
                     </div>
                   </div>
@@ -89,7 +91,7 @@
                                 </div>
                               </td>
                               <td class="align-middle text-center text-sm">
-                                <span class="text-secondary text-md font-weight-bold">{{ room.max_occupancy }}</span>
+                                <span class="text-secondary text-md font-weight-bold">{{ room_type.max_occupancy }}</span>
                               </td>
                               <td class="align-middle text-center text-sm">
                                 <span class="text-secondary text-xs font-weight-italic">

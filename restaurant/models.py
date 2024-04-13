@@ -14,6 +14,8 @@ class MenuItem(models.Model):
 
     # Optional field to indicate suggested serving size
     serves = models.PositiveIntegerField(blank=True, null=True)
+    images = models.ImageField(upload_to='menu_images/', blank=True)
+    today_special = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "Menu Item"
@@ -61,8 +63,9 @@ class OrderItem(models.Model):
         ('pending', 'Pending'),
         ('preparing', 'Preparing'),
         ('prepared', 'Prepared'),
+        ('delivered', 'Delivered'),
     )
-    status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='pending')
+    status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='preparing')
     total_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     placed_at = models.DateTimeField(auto_now_add=True, null = True, blank = True)  # Automatically record order placement time
     def save(self, *args, **kwargs):
@@ -98,6 +101,7 @@ class Order(models.Model):
     STATUS_CHOICES = (
         ('pending', 'Pending'),
         ('preparing', 'Preparing'),
+        ('prepared', 'Prepared'),
         ('delivered', 'Delivered'),
     )
     status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='pending')

@@ -75,6 +75,15 @@
           <span class="nav-link-text ms-1">Menu</span>
           </a>
         </li>
+
+        <li class="nav-item">
+            <a class="nav-link {% if request.path == '/restaurant/ordered-items/' %}active{% endif %}" href="{% url 'restaurant:ordered-items' %}">
+            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">Ordered Items</span>
+          </a>
+        </li>
         <li class="nav-item">
             <a class="nav-link {% if request.path == '/restaurant/orders/' %}active{% endif %}" href="{% url 'restaurant:orders' %}">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">

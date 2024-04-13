@@ -12,71 +12,120 @@
 {% block content %}
 
 <div class="container-fluid py-4">
-
+  {% if messages %}
+  <div class="alert alert-success" role="alert">
+    {% for message in messages %}
+    <strong>{{ message }}!</strong>
+    {% endfor %}
+  </div>
+  {% endif %}
 
     <div class="row">
       
         <div class="col-8">
-          <div class="card mb-4">
-            <div class="card-header pb-0">
-                <div class="d-lg-flex">
-                  <div>
-                    <h5 class="mb-0">All Products</h5>
+          <div class="card">
+            <div class="card-body">
+               <h5 class="mb-4">Product Details</h5>
+               <div class="row">
+                {% if today_special %}
+                  <div class="col-xl-5 col-lg-6 text-center">
+                     <img class="w-100 border-radius-lg shadow-lg mx-auto" src="{{ today_special.images.url }}" alt="chair">
+
+                     <!--
+                     <div class="my-gallery d-flex mt-4 pt-2" itemscope="" itemtype="http://schema.org/ImageGallery" data-pswp-uid="1">
+                        <figure class="ms-2 me-3" itemprop="associatedMedia" itemscope="" itemtype="http://schema.org/ImageObject">
+                           <a href="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/product-thumb-1.jpg" itemprop="contentUrl" data-size="500x600">
+                           <img class="w-100 min-height-100 max-height-100 border-radius-lg shadow" src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/product-thumb-1.jpg" alt="Image description">
+                           </a>
+                        </figure>
+                     </div>
+                      -->
                   </div>
+                  <div class="col-lg-5 mx-auto">
+                     <h3 class="mt-lg-0 mt-4 text-uppercase">{{ today_special.name }}</h3>
+                     <div class="rating">
+                        <i class="fas fa-star" aria-hidden="true"></i>
+                        <i class="fas fa-star" aria-hidden="true"></i>
+                        <i class="fas fa-star" aria-hidden="true"></i>
+                        <i class="fas fa-star" aria-hidden="true"></i>
+                        <i class="fas fa-star-half-alt" aria-hidden="true"></i>
+                     </div>
+                     <br>
+                     <h6 class="mb-0 mt-3">Price</h6>
+                     <h5>₱ {{ today_special.price }}</h5>
+                     <span class="badge bg-gradient-success">Today's Special</span>
+                     <br>
+                     <label class="mt-4">Description</label>
+                     <ul>
+                        <li>{{ today_special.description }}</li>
+                        <li>Good for {{ today_special.serves }} people(s)</li>
 
-                </div>
-            </div>
-            <div class="card-body px-0 pt-0 pb-2">
-              <div class="table-responsive p-0">
-                <table class="table align-items-center justify-content-center mb-0">
-                  <thead>
-                    <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Product</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Category</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Pricing</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">Serving</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">Actions</th>
+                     </ul>
+                  </div>
+                  {% endif %}
+               </div>
+               <div class="row mt-5">
+                  <div class="col-12">
+                     <h5 class="ms-3">Other Products</h5>
+                     <div class="table table-responsive">
+                        <table class="table align-items-center mb-0">
+                           <thead>
+                              <tr>
+                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Product</th>
+                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Category</th>
+                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Price</th>
+                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Review</th>
+                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Good for</th>
+                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Availability</th>
 
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for menu in menu_items %}
+                              </tr>
+                           </thead>
+                           <tbody>
+                            {% for menu in menu_items %}
+                              <tr>
+                                 <td>
+                                    <div class="d-flex px-2 py-1">
+                                       <div>
+                                          <img src="{{ menu.images.url}}" class="avatar avatar-md me-3" alt="table image">
+                                       </div>
+                                       <div class="d-flex flex-column justify-content-center">
+                                          <h6 class="mb-0 text-sm">{{ menu.name }}</h6>
+                                       </div>
+                                    </div>
+                                 </td>
+                                 <td>
+                                  <p class="text-sm text-secondary mb-0">{{ menu.category }}</p>
+                               </td>
+                                 <td>
+                                    <p class="text-sm text-secondary mb-0">₱ {{ menu.price }}</p>
+                                 </td>
+                                 <td>
+                                    <div class="rating ms-lg-n4">
+                                       <i class="fas fa-star" aria-hidden="true"></i>
+                                       <i class="fas fa-star" aria-hidden="true"></i>
+                                       <i class="fas fa-star" aria-hidden="true"></i>
+                                       <i class="fas fa-star" aria-hidden="true"></i>
+                                       <i class="fas fa-star-half-alt" aria-hidden="true"></i>
+                                    </div>
+                                 </td>
+                                 <td class="align-middle text-center">
+                                  <span class="text-secondary text-sm">{{ menu.serves}}</span>
+                               </td>
+                                 <td class="align-middle text-sm">
+                                    <div class="progress mx-auto">
+                                       <div class="progress-bar bg-gradient-success" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                 </td>
 
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2">
-                          <div>
-                            <img src="../assets/img/small-logos/logo-spotify.svg" class="avatar avatar-sm rounded-circle me-2" alt="spotify">
-                          </div>
-                          <div class="my-auto">
-                            <h6 class="mb-0 text-md text-uppercase">{{ menu.name }}</h6>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <p class="text-sm font-weight-bold mb-0 text-uppercase">{{ menu.category }}</p>
-                      </td>
-                      <td>
-                        <p class="text-sm font-weight-bold mb-0">₱ {{ menu.price }}</p>
-                      </td>
-                      <td>
-                        <p class="text-sm text-center font-weight-bold mb-0">{{ menu.serves }}</p>
-                      </td>
-                      <td class="align-middle">
+                              </tr>
+                            {% endfor %}
 
+                           </tbody>
+                        </table>
+                     </div>
+                  </div>
+               </div>
 
-                        <div class="ms-auto text-center">
-                          <a class="btn btn-link text-dark p-0 mb-0" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="top" data-animation="true" aria-label="Confirm" data-bs-original-title="View"><i class="fa fa-eye text-dark me-2" aria-hidden="true"></i></a>
-                          <a class="btn btn-link text-dark p-0 mb-0" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="top" data-animation="true" aria-label="Edit" data-bs-original-title="Edit"><i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i></a>
-                          <a class="btn btn-link text-dark p-0 mb-0" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="top" data-animation="true" aria-label="Cancel" data-bs-original-title="Delete"><i class="fas fa-trash-alt text-dark me-2" aria-hidden="true"></i></a>
-                        </div>
-                      </td>
-                    </tr>
-
-                    {% endfor %}
-                  </tbody>
-                </table>
-              </div>
             </div>
           </div>
         </div>
@@ -87,50 +136,63 @@
               <h3 class="font-weight-bolder text-info text-gradient">Add new product</h3>
             </div>
             <div class="card-body">
-              <form role="form text-left">
+              <form role="form text-left" action="{% url 'restaurant:add-new-menu' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
                 <label>Product name:</label>
                 <div class="input-group mb-3">
-                  <input type="text" class="form-control" placeholder="Product name" aria-label="Email" aria-describedby="email-addon">
+                  <input type="text" class="form-control" name="name" placeholder="Product name" aria-label="Email" aria-describedby="email-addon">
                 </div>
                 <div class="row">
-                  <div class="col-md-7">
+                  
+                  <div class="col-md-5">
                     <div class="form-group">
                       <label for="category">Category</label>
                       <select class="form-control text-center" id="category" name="category">
                         <option>-- Select Category -- </option>
                         {% for category in categories %}
-                          <option class="text-uppercase" value="{{ category }}">{{ category }}</option>
+                          <option class="text-uppercase" value="{{ category }}" name="category">{{ category }}</option>
                         {% endfor %}
                       </select>
                     </div>
                   </div>
-                  <div class="col-md-5">
+                  <div class="col-md-4">
                     <div class="form-group">
                     
                       <label for="category">Pricing</label>
                       <div class="input-group">
                         <span class="input-group-text">₱</span>
-                        <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+                        <input type="text" class="form-control" name="price" aria-label="Amount (to the nearest dollar)">
                         <span class="input-group-text">.00</span>
                     </div>
                   </div>
+
+
+
                 </div>
+
+                <div class="col-md-3">
+                  <label>Serving:</label>
+                  <div class="input-group mb-3">
+                    <input type="number" class="form-control" name="serving" placeholder="0" aria-label="Email" aria-describedby="email-addon">
+                  </div>
+                </div>
+
 
                 <div class="form-group">
                   <label for="exampleFormControlTextarea1">Product Description: </label>
-                  <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                  <textarea class="form-control" id="exampleFormControlTextarea1" name="description" rows="3"></textarea>
                 </div>
 
                 <div class="form-group">
                   <label for="example-text-input" class="form-control-label">Media</label>
-                  <input class="form-control" type="file" value="John Snow" id="example-text-input" multiple>
+                  <input class="form-control" type="file" value="John Snow" name="images" id="example-text-input" multiple>
                 </div>
 
 
 
                   
                 <div class="text-center">
-                  <button type="button" class="btn btn-round bg-gradient-info btn-lg w-100 mt-4 mb-0">Add new product</button>
+                  <button type="submit" class="btn btn-round bg-gradient-info btn-lg w-100 mt-4 mb-0">Add new product</button>
                 </div>
               </form>
             </div>

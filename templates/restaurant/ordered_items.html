@@ -1,0 +1,177 @@
+{% extends 'dashboard/layout/restaurant_base.html' %}
+
+
+{% block title %} Resturant Orders {% endblock %}
+
+{% block stylesheet %}
+
+<style>
+
+</style>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    {% if messages %}
+    <div class="alert alert-success" role="alert">
+      {% for message in messages %}
+      <strong>{{ message }}!</strong>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    
+    <div class="row mt-5">
+      
+        <div class="col-8">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="ms-3">Ordered items </h5>
+                <div class="table table-responsive">
+                   <table class="table align-items-center mb-0">
+                      <thead>
+                         <tr>
+                            <th class="text-uppercase text-center text-secondary text-xxs font-weight-bolder opacity-7">Order ID</th>
+                            <th class="text-uppercase text-center text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Menu Item</th>
+                            <th class="text-uppercase text-center text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Quantity</th>
+                            <th class="text-uppercase text-center text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Status</th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Total Cost</th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
+
+                         </tr>
+                      </thead>
+                      <tbody>
+                       {% for menu in items %}
+                         <tr>
+                            <td class="align-middle text-center">
+                                <span class="text-secondary text-sm"># {{ menu.order.id }}</span>
+                            </td>
+                            <td class="align-middle text-center">
+                                <span class="text-secondary text-sm">{{ menu.menu_item.name }}</span>
+                            </td>
+                            <td class="align-middle text-center">
+                                <span class="text-secondary text-sm">{{ menu.quantity }}</span>
+                            </td>
+                            <td class="align-middle text-center">
+                                <span class="text-success text-sm">{{ menu.status }}</span>
+                            </td>
+                            <td class="align-middle text-center">
+                                <span class="text-secondary text-sm">₱ {{ menu.total_cost }}</span>
+                            </td>
+                            
+                            <td>    
+                                {% if menu.status == 'pending' %}
+                                <a href="{% url 'restaurant:prepare-order-item' menu.id %}" type="button" class="btn btn-link text-dark p-0 mb-0" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="top" data-animation="true" aria-label="Confirm" data-bs-original-title="Prepare Order"><i class="fa fa-check-circle text-dark me-2" aria-hidden="true"></i></a>
+                                {% elif menu.status == 'preparing' %}
+                                <a href="{% url 'restaurant:complete-order-item' menu.id %}" type="button" class="btn btn-link text-dark p-0 mb-0" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="top" data-animation="true" aria-label="Confirm" data-bs-original-title="Order Prepared"><i class="fa fa-check-circle text-dark me-2" aria-hidden="true"></i></a>
+
+                                {% endif %}
+
+                                
+                            </td>
+
+
+                    
+
+                         </tr>
+                       {% endfor %}
+
+                      </tbody>
+                   </table>
+                </div>
+  
+              </div>
+            </div>
+          </div>
+  
+          <div class="col-4">
+            <div class="card">
+              <div class="card-header pb-0 text-left">
+                <h3 class="font-weight-bolder text-info text-gradient">Add new product</h3>
+              </div>
+              <div class="card-body">
+                <form role="form text-left" action="{% url 'restaurant:add-new-menu' %}" method="POST" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <label>Product name:</label>
+                  <div class="input-group mb-3">
+                    <input type="text" class="form-control" name="name" placeholder="Product name" aria-label="Email" aria-describedby="email-addon">
+                  </div>
+                  <div class="row">
+                    
+                    <div class="col-md-5">
+                      <div class="form-group">
+                        <label for="category">Category</label>
+                        <select class="form-control text-center" id="category" name="category">
+                          <option>-- Select Category -- </option>
+                          {% for category in categories %}
+                            <option class="text-uppercase" value="{{ category }}" name="category">{{ category }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                      
+                        <label for="category">Pricing</label>
+                        <div class="input-group">
+                          <span class="input-group-text">₱</span>
+                          <input type="text" class="form-control" name="price" aria-label="Amount (to the nearest dollar)">
+                          <span class="input-group-text">.00</span>
+                      </div>
+                    </div>
+  
+  
+  
+                  </div>
+  
+                  <div class="col-md-3">
+                    <label>Serving:</label>
+                    <div class="input-group mb-3">
+                      <input type="number" class="form-control" name="serving" placeholder="0" aria-label="Email" aria-describedby="email-addon">
+                    </div>
+                  </div>
+  
+  
+                  <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Product Description: </label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" name="description" rows="3"></textarea>
+                  </div>
+  
+                  <div class="form-group">
+                    <label for="example-text-input" class="form-control-label">Media</label>
+                    <input class="form-control" type="file" value="John Snow" name="images" id="example-text-input" multiple>
+                  </div>
+  
+  
+  
+                    
+                  <div class="text-center">
+                    <button type="submit" class="btn btn-round bg-gradient-info btn-lg w-100 mt-4 mb-0">Add new product</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+     </div>
+
+
+</div>
+
+
+
+
+
+{% endblock %}
+
+
+
+{% block javascripts %}
+
+
+
+{% endblock %}

@@ -9,6 +9,8 @@
     <hr class="horizontal dark mt-0">
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
+
+        <!--
         <li class="nav-item">
           <a class="nav-link {% if request.path == '/frontdesk/dashboard/' %}active{% endif %}" href="{% url 'booking:dashboard' %}">
 
@@ -19,6 +21,7 @@
             <span class="nav-link-text ms-1">Dashboard</span>
           </a>
         </li>
+        -->
 
         <li class="nav-item">
             <a class="nav-link {% if request.path == '/frontdesk/booking/' %}active{% endif %}" href="{% url 'booking:booking' %}">
@@ -34,6 +37,14 @@
               <i class="fa fa-ticket text-success text-sm opacity-10"></i>
             </div>
             <span class="nav-link-text ms-1">Reservation</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.path == '/frontdesk/rooms/' %} active {% endif %}" href="{% url 'booking:rooms' %}">
+            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="fa fa-hotel text-info text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">Function Hall</span>
           </a>
         </li>
         <li class="nav-item">

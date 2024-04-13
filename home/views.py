@@ -12,10 +12,21 @@ from django.shortcuts import redirect, get_object_or_404
 
 def home(request):
     rooms = RoomType.objects.all()
+    room_types_with_images = []
+
+    # Iterate over each room type
+    for room_type in rooms:
+        # Retrieve images for the current room type
+        room_images = room_type.images.all()
+
+        # Append the room type and its images to the list
+        room_types_with_images.append({'room_type': room_type, 'room_images': room_images})
+
     guests = Guest.objects.all()
     context = {
         'rooms': rooms,
         'guests': guests,
+        'room_types_with_images': room_types_with_images,
     }
     return render(request, 'home/index.html', context)
 
@@ -30,6 +41,7 @@ def get_room_details(request, room_slug):
 
   try:
     room_slug = RoomType.objects.get(slug=room_slug)
+    room_images = room_slug.images.all()
     rooms = list(room_slug.room_set.all())  # Efficiently retrieve rooms with prefetching
   except Room.DoesNotExist:
     return None
@@ -37,6 +49,7 @@ def get_room_details(request, room_slug):
   context = {
      'room_slug': room_slug,
      'rooms': rooms,
+     'room_images': room_images
   }
 
   print(room_slug.rate_per_night)

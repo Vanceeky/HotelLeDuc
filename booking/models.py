@@ -24,7 +24,11 @@ class RoomType(models.Model):
     description = models.TextField(blank=True)
     rate_per_night = models.DecimalField(max_digits=10, decimal_places=2, default="0.00")
     slug = models.SlugField(max_length=100, blank=True, unique=True)  # Add the slug field
-    images = models.ImageField(upload_to='room_images/', blank=True)  # Upload images to a directory
+    #images = models.ImageField(upload_to='room_images/', blank=True)  # Upload images to a directory
+    amenities = models.ManyToManyField('Amenity', blank=True)  # Relationship with Amenities model
+
+
+    max_occupancy = models.PositiveIntegerField(blank=True, null=True) 
     class Meta:
         verbose_name = "Room Type"
         verbose_name_plural = "Room Types"
@@ -32,6 +36,13 @@ class RoomType(models.Model):
     def __str__(self):
         return self.name
 
+class RoomImage(models.Model):
+    room_type = models.ForeignKey(RoomType, related_name='images', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='room_images/')
+
+    def __str__(self):
+        return self.room_type.name + " - " + str(self.id)
+    
 class Room(models.Model):
     """
     Model to represent individual hotel rooms.
@@ -39,12 +50,6 @@ class Room(models.Model):
     room_number = models.CharField(max_length=10, unique=True)
     room_type = models.ForeignKey(RoomType, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, blank=True)
-    description = models.TextField(blank=True)
-
-
-    max_occupancy = models.PositiveIntegerField(blank=True, null=True) 
-    amenities = models.ManyToManyField('Amenity', blank=True)  # Relationship with Amenities model
-
 
     STATUS_CHOICES = (
         ('available', 'Available'),
@@ -101,6 +106,7 @@ class Reservation(models.Model):
         ('confirmed', 'Confirmed'),
         ('pending', 'pending'),
         ('cancelled', 'Cancelled'),
+        ('completed', 'Completed'),
     )
 
     status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='pending')

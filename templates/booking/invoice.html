@@ -123,7 +123,9 @@
                                 </div><!-- end table responsive -->
 
                             </div>
+                            
                             <div class="py-2">
+                                {% if order %}
                                 <h5 class="font-size-15">Order Summary</h5>
         
                                 <div class="table-responsive">
@@ -158,23 +160,31 @@
                                                 <th scope="row" colspan="4" class="text-end">Sub Total</th>
                                                 <td class="text-end">₱{{ order.total_price }}</td>
                                             </tr>
+                                            <tr>
+                                                <th scope="row" colspan="4" class="text-end">Amount Paid</th>
+                                                <td class="text-end">₱{{ booking.amount_paid }}</td>
+                                            </tr>
                                             <!-- end tr -->
                                             <!-- end tr -->
+                                            <!--
                                             <tr>
                                                 <th scope="row" colspan="4" class="border-0 text-end">Total</th>
                                                 <td class="border-0 text-end"><h4 class="m-0 fw-semibold">₱{{ order.total_price }}</h4></td>
                                             </tr>
+                                            -->
                                             <!-- end tr -->
                                         </tbody><!-- end tbody -->
                                     </table><!-- end table -->
                                 </div><!-- end table responsive -->
+                                {% endif %}
                                 <div class="d-print-none mt-4">
                                     <div class="float-end">
                                         <a href="javascript:window.print()" class="btn btn-success me-1"><i class="fa fa-print"></i></a>
-                                        <a href="#" class="btn btn-primary w-md">Save</a>
+                                        <a href="{% url 'booking:booking' %}" class="btn btn-primary w-md">Ok</a>
                                     </div>
                                 </div>
                             </div>
+                            
                         </div>
                     
                     </div>
