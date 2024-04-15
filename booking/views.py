@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from booking.models import *
+from django.http import HttpResponseRedirect
 from restaurant.models import Order
 from django.db.models import Count  # Import Count for room count annotation
 from django.db.models import Q
@@ -15,6 +16,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+from django.urls import reverse
 
 def room_types_list(request):
   """API endpoint to retrieve all room types."""
@@ -120,12 +122,14 @@ def confirm_reservation(request, pk):
     reservation = Reservation.objects.get(id=pk)
     room_type = reservation.room_type
 
+    total_rooms = Room.objects.filter(room_type=room_type).count() #remove this
+    
     available_rooms = Room.objects.filter(
         room_type=room_type,
         status='available',
     ).annotate(
         num_reservations=Count('reservedroom__reservation', filter=Q(reservedroom__reservation__status='confirmed'))
-    ).filter(num_reservations__lt=4)
+    ).filter(num_reservations__lt=total_rooms) #less than 4
 
     for room in available_rooms:
         overlapping_reservations = ReservedRoom.objects.filter(
@@ -438,16 +442,15 @@ def reservations_test(request):
 
 
 def get_unavailable_dates(check_in, check_out):
-  # Convert check_in and check_out to date objects
+
   check_in_str = check_in.strftime('%Y-%m-%d')
   check_out_str = check_out.strftime('%Y-%m-%d')
 
-  # Use strptime to convert strings to date objects
+
   start_date = datetime.strptime(check_in_str, '%Y-%m-%d').date()
   end_date = datetime.strptime(check_out_str, '%Y-%m-%d').date()
 
 
-  # Create a list to store unavailable dates
   unavailable_dates = []
   current_date = start_date
   while current_date <= end_date:
@@ -461,3 +464,132 @@ def get_unavailable_dates(check_in, check_out):
 def function_hall(request):
    return render(request, 'booking/function_hall.html')
 
+
+
+def check_availability_view2(request, room_slug):
+
+  if request.method == 'POST':
+
+    check_in_str = request.POST.get('checkIn_check')
+    check_out_str = request.POST.get('checkOut_check')
+
+
+    try:
+      check_in = datetime.strptime(check_in_str, '%Y-%m-%d').date()
+      check_out = datetime.strptime(check_out_str, '%Y-%m-%d').date()
+    except ValueError:
+
+      error_message = "Invalid date format. Please use YYYY-MM-DD."
+      return render(request, 'home/room.html', {'room_slug': room_slug, 'error_message': error_message})
+
+    
+    try:
+      room_type = RoomType.objects.get(slug=room_slug)
+    except RoomType.DoesNotExist:
+    
+      error_message = "Room type not found."
+      return render(request, 'home/room.html', {'room_slug': room_slug, 'error_message': error_message})
+
+  
+    total_rooms = Room.objects.filter(room_type=room_type).count()
+
+ 
+    overlapping_reservations = False
+    for room in Room.objects.filter(room_type=room_type):
+      reservations = Reservation.objects.filter(
+          room=room,
+         
+          check_out__gte=check_in,
+          check_in__lte=check_out
+      )
+
+ 
+      if reservations.exists():
+        overlapping_reservations = True
+        break 
+
+
+    context = {
+      'room_slug': room_slug,
+      'check_in': check_in.strftime('%Y-%m-%d'),  
+      'check_out': check_out.strftime('%Y-%m-%d'),
+    }
+
+
+    if not overlapping_reservations:
+        context['available_message'] = f"{total_rooms} rooms of this type are available for your selected dates."
+    else:
+        context['no_availability_message'] = "No rooms of this type are available for the selected dates."
+
+    return render(request, 'home/room.html', context)
+  
+
+
+  else:
+
+    try:
+      room_type = RoomType.objects.get(slug=room_slug)
+    except RoomType.DoesNotExist:
+ 
+      error_message = "Room type not found."
+      return render(request, 'home/room.html', {'room_slug': room_slug, 'error_message': error_message})
+
+
+    context = {'room_slug': room_slug}
+    return render(request, 'home/room.html',  context)
+  
+
+def check_availability_view(request, room_slug):
+    if request.method == 'POST':
+      
+        check_in_str = request.POST.get('checkIn_check')
+        check_out_str = request.POST.get('checkOut_check')
+
+    
+        try:
+            check_in = datetime.strptime(check_in_str, '%Y-%m-%d').date()
+            check_out = datetime.strptime(check_out_str, '%Y-%m-%d').date()
+        except ValueError:
+          
+            return JsonResponse({'error_message': 'Invalid date format. Please use YYYY-MM-DD.'}, status=400)
+
+   
+        try:
+            room_type = RoomType.objects.get(slug=room_slug)
+        except RoomType.DoesNotExist:
+        
+            return JsonResponse({'error_message': 'Room type not found.'}, status=404)
+
+ 
+        overlapping_reservations = Reservation.objects.filter(
+            room__room_type=room_type,
+            check_out=check_out,
+            check_in=check_in
+        ).exists()
+
+        if overlapping_reservations:
+            return JsonResponse({'no_availability_message': 'No rooms of this type are available for the selected dates.'})
+
+ 
+        available_rooms = Room.objects.filter(
+            room_type=room_type,
+            status='available'
+        ).count()
+
+
+        response_data = {
+            'room_slug': room_slug,
+            'check_in': check_in.strftime('%Y-%m-%d'),
+            'check_out': check_out.strftime('%Y-%m-%d'),
+        }
+
+
+        if available_rooms > 0:
+            response_data['available_message'] = f"There is an available room of this type for your selected dates."
+        else:
+            response_data['no_availability_message'] = "No rooms of this type are available for the selected dates."
+
+        return JsonResponse(response_data)
+
+
+    return JsonResponse({'error_message': 'Method not allowed.'}, status=405)

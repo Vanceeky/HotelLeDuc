@@ -121,11 +121,59 @@
                       <li>Good for {{ room_slug.max_occupancy }} people(s)</li>
                     </ul>
 
-                    <div class="row mt-4">
-                      <div class="col-lg-5">
-                        <button class="btn btn-info mb-0 mt-lg-auto w-100" type="button" name="button">Make reservation</button>
+                    <h1>Check Room Availability</h1>
+                    <form id="availabilityForm" method="POST">
+                        {% csrf_token %}
+                        <label for="checkIn">Check In:</label>
+                        <input type="date" id="checkIn_check" name="checkIn_check" required><br><br>
+                        
+                        <label for="checkOut">Check Out:</label>
+                        <input type="date" id="checkOut_check" name="checkOut_check" required><br><br>
+                        
+                        <button type="submit">Check Availability</button>
+                    </form>
+                    
+                    <div id="availabilityResult"></div>
+
+                    <form method="POST" action="">
+                      <div class="card">
+                        <div class="card-header pb-0 text-left">
+                          <p class="mb-0">Please select date below to check room availability</p>
+                        </div>
+                        <div class="card-body">
+                          <div class="row">
+                            <div class="d-flex align-items-center justify-content-center">
+                              <div class="form-group">
+                                <label for="example-date-input" class="form-control-label">Check In</label>
+                                <input class="form-control" type="date" value="" id="checkIn_check" name="checkIn_check" >
+                              </div>
+                              <div class="form-group mx-2">
+                                <label for="example-date-input" class="form-control-label">Check Out</label>
+                                <input class="form-control" type="date" value="" id="checkOut_check" name="checkOut_check" >
+                              </div>
+                              <button class="btn btn-info mb-0 mt-lg-auto w-100" type="submit">Check Availability</button>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    </form>
+                
+                    {% if available_message %}
+                      <div class="alert alert-success mt-3" role="alert">
+                        {{ available_message }}
+                      </div>
+                    {% elif no_availability_message %}
+                      <div class="alert alert-danger mt-3" role="alert">
+                        {{ no_availability_message }}
+                      </div>
+                    {% endif %}
+                
+                    {% if error_message %}
+                      <div class="alert alert-warning mt-3" role="alert">
+                        {{ error_message }}
+                      </div>
+                    {% endif %}
+
                   </div>
                 </div>
 
@@ -221,6 +269,7 @@
                                       <div class="card-header pb-0 text-left">
                                         <h3 class="font-weight-bolder text-info text-gradient">{{ room_slug.name }} <span class=" text-secondary"> -  {{ room_slug.rate_per_night}} / night</span></h3>
                                         <p class="mb-0">Please provide your information below</p>
+                                        <p id="availabilityMessage"></p>
                                       </div>
                                       <div class="card-body">
                                           <input type="hidden" value="{{ room_slug.id}}" name="room_type" id="room_type">
@@ -562,11 +611,38 @@
  {% endcomment %}
  
 
-<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+<script src='/static/assets/js/calendar.min.js'></script>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
+ <!--
+ <script>
+  // JavaScript code to handle form submission and display result
+  document.getElementById("availabilityForm").addEventListener("submit", function(event) {
+      event.preventDefault();
 
+      var formData = new FormData(this);
 
+      fetch(`/frontdesk/check-availability-view/{{ room_slug.slug }}/`, {
+          method: 'POST',
+          body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+          var resultDiv = document.getElementById("availabilityResult");
+          resultDiv.innerHTML = ""; // Clear previous result
+          if (data.error_message) {
+              resultDiv.innerHTML = "<p>Error: " + data.error_message + "</p>";
+          } else {
+              var message = data.available_message || data.no_availability_message;
+              resultDiv.innerHTML = "<p>" + message + "</p>";
+          }
+      })
+      .catch(error => {
+          console.error('Error:', error);
+      });
+  });
+</script>
+-->
 
 
 <script>
@@ -644,29 +720,37 @@
         
 
   </script> {% endcomment %}
-  <script>
-    function toggleNextButton() {
-      const checkbox = document.getElementById("rememberMe");
-      const nextButton = document.getElementById("nextButton");
-      nextButton.disabled = !checkbox.checked;
-    }
-    </script>
+
 
 
 
   <script>
-    const today = new Date();
+    const today_check = new Date();
     const checkIn = document.getElementById('checkIn');
     const checkOut = document.getElementById('checkOut');
   
     function disablePastDates(element) {
-      element.min = today.toISOString().split('T')[0];
+      element.min = today_check.toISOString().split('T')[0];
     }
   
     disablePastDates(checkIn);
     disablePastDates(checkOut);
   </script>
 
+
+  
+  <script>
+    const today = new Date();
+    const checkIn_check = document.getElementById('checkIn_check');
+    const checkOut_check = document.getElementById('checkOut_check');
+  
+    function disablePastDates(element) {
+      element.min = today.toISOString().split('T')[0];
+    }
+  
+    disablePastDates(checkIn_check);
+    disablePastDates(checkOut_check);
+  </script>
 
   <script>
 
@@ -687,14 +771,57 @@
         var checkIn = new Date($("#checkIn").val());
         var checkOut = new Date($("#checkOut").val());
         console.log(checkIn)
+
+        var formattedCheckIn_test = checkIn.toISOString().split('T')[0]; // Adjust for locale if needed
+        var formattedCheckOut_test = checkOut.toISOString().split('T')[0];
+
+
+
         const formattedCheckIn = checkIn.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
         const formattedCheckOut = checkOut.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
         
         console.log(formattedCheckIn);   // Output: Fri Apr 05 2024
         console.log(formattedCheckOut); 
 
+        const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+
         // Check if checkout date is after check-in date
         if (checkOut > checkIn) {
+          const nextButton = document.getElementById('nextButton');
+          $.ajax({
+            url: '/frontdesk/check-availability-view/{{ room_slug.slug }}/',
+            method: 'POST',
+            beforeSend: function(xhr) {
+              xhr.setRequestHeader('X-CSRFToken', csrfToken);
+            },
+            data: {
+                'checkIn_check': formattedCheckIn_test,
+                'checkOut_check': formattedCheckOut_test
+            },
+            dataType: 'json',
+            success: function(response) {
+                // Update availability message based on response
+                if (response.available_message) {
+                    $('#availabilityMessage').text(response.available_message).removeClass('text-danger').addClass('text-success');
+                    
+                    nextButton.disabled = false
+                } else if (response.no_availability_message) {
+                    $('#availabilityMessage').text(response.no_availability_message).removeClass('text-success').addClass('text-danger');
+                    
+                    
+                    nextButton.disabled = true
+                }
+            },
+            error: function(xhr, status, error) {
+                // Handle error
+                console.error(xhr.responseText);
+            }
+         });
+
+
+
+
           // Calculate difference in milliseconds
           var diffInMs = Math.abs(checkOut - checkIn);
     
@@ -740,6 +867,8 @@
           $("#length_of_stay").val(""); // Clear length of stay
           $("#amount_to_pay").val(""); // Clear amount to pay
         }
+
+
   
       });
     

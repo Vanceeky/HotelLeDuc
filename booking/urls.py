@@ -29,6 +29,8 @@ urlpatterns = [
     path('api/available-rooms/<int:room_type_pk>/', views.available_room_list, name='available-rooms-list'),
 
     path('test/', views.reservations_test, name="test"),
+    
+    path('check-availability-view/<slug:room_slug>/', views.check_availability_view, name='check_availability'),
 
 
 

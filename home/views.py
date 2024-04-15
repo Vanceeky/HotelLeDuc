@@ -166,13 +166,14 @@ def guest_reservation(request):
       )
 
       room_type = RoomType.objects.get(id=room_type_id)
+    
       reservation = Reservation.objects.create(
                 room_type=room_type,
                 guest=guest,
                 check_in=check_in_date,
                 check_out=check_out_date,
                 amount_paid=amount_paid,
-                images=receipt,  # Assuming you want to save the receipt
+                images=receipt,
       )
       reservation.calculate_total_amount()
  

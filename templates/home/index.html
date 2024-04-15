@@ -323,7 +323,21 @@
     <section class="pb-5 position-relative bg-gradient-dark mx-n3">
       <div class="container">
 
-        
+        {% if available_message %}
+        <div class="alert alert-success mt-3" role="alert">
+          {{ available_message }}
+        </div>
+      {% elif no_availability_message %}
+        <div class="alert alert-danger mt-3" role="alert">
+          {{ no_availability_message }}
+        </div>
+      {% endif %}
+  
+      {% if error_message %}
+        <div class="alert alert-warning mt-3" role="alert">
+          {{ error_message }}
+        </div>
+      {% endif %}
         <div class="row">
           <div class="col-md-8 text-start mb-5 mt-5">
             <h3 class="text-white z-index-1 position-relative">Rooms and Amenities</h3>
