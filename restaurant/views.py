@@ -6,20 +6,31 @@ from django.shortcuts import get_object_or_404
 from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
+from django.db.models import Count, Sum, Case, When
+
 
 def dashboard(request):
-    return render(request, 'restaurant/dashboard.html')
+    
+    top_selling_items = OrderItem.objects.values('menu_item__name', 'menu_item__price', 'menu_item__images').annotate(total_quantity=Sum('quantity')).order_by('-total_quantity')[:5]
+
+    
+    for item in top_selling_items:
+        item['revenue'] = item['total_quantity'] * item['menu_item__price']
+
+    
+    context = {'top_selling_items': top_selling_items}
+    return render(request, 'restaurant/dashboard.html', context)
 
 def menu(request):
     menu_items = MenuItem.objects.all()
-    categories = menu_items.values_list('category', flat=True).distinct()  # Get distinct categories
+    categories = menu_items.values_list('category', flat=True).distinct()  
     today_special = menu_items.filter(today_special=True).get()
     print(today_special.name)
 
     context = {
         'menu_items': menu_items,
         'categories': categories,
-        'today_special': today_special  # Add categories to context
+        'today_special': today_special  
     }
     return render(request, 'restaurant/menu.html', context)
 
@@ -305,6 +316,7 @@ def create_order_item_ajax(request):
      
       if existing_order:
         order_item = OrderItem.objects.create(
+            order = booking.order,
             menu_item=menu_item,
             quantity=quantity,
         )
@@ -353,9 +365,17 @@ def complete_order_item(request, order_item_id):
     if all_items_prepared:
         order.status = 'prepared'
         order.save()
-        messages.success(request, f"Order #{order.pk} marked as delivered!")
+        messages.success(request, f"Order #{order.pk} marked as prepared!")
     else:
         messages.info(request, f"Order item marked as prepared. Update order status when all items are prepared.")
 
     return redirect('restaurant:ordered-items')
+
+def complete_order_delivered(request, order_id):
+   order = Order.objects.get(id = order_id)
+   order.status = 'delivered'
+   order.save()
+   messages.success(request, f"Order {order} Delivered!")
+
+   return redirect('restaurant:orders')
 

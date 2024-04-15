@@ -1,12 +1,14 @@
 from django.shortcuts import render
 from booking.models import Amenity, RoomType, Room, Reservation, Guest
-
+from restaurant.models import MenuItem
 import datetime
 from datetime import date
 
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import redirect, get_object_or_404
+from django.contrib import messages
+
 
 # Create your views here.
 
@@ -23,10 +25,17 @@ def home(request):
         room_types_with_images.append({'room_type': room_type, 'room_images': room_images})
 
     guests = Guest.objects.all()
+
+    menu_items = MenuItem.objects.all()
+    categories = menu_items.values_list('category', flat=True).distinct()
+    today_special = menu_items.filter(today_special=True).get()
     context = {
         'rooms': rooms,
         'guests': guests,
         'room_types_with_images': room_types_with_images,
+        'menu_items': menu_items,
+        'categories': categories,
+        'today_special': today_special 
     }
     return render(request, 'home/index.html', context)
 
@@ -169,7 +178,9 @@ def guest_reservation(request):
  
       reservation.save() 
 
-      return redirect('home:home') 
+      messages.success(request, 'Your reservation is sent! Please wait for the confirmation email to confirm your reservation')
+      return redirect('home:room_detail', room_type.slug ) 
+    
 
   else:
 

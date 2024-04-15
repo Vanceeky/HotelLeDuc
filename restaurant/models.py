@@ -65,7 +65,7 @@ class OrderItem(models.Model):
         ('prepared', 'Prepared'),
         ('delivered', 'Delivered'),
     )
-    status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='preparing')
+    status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='pending')
     total_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     placed_at = models.DateTimeField(auto_now_add=True, null = True, blank = True)  # Automatically record order placement time
     def save(self, *args, **kwargs):

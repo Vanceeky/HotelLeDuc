@@ -128,11 +128,22 @@
                                 <!--<a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
                                   view
                                 </a>-->
+                                {% if res.status == 'confirmed' %}
+
+                                <a class="btn btn-link text-dark p-0 mb-0" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" data-animation="true"><i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i></a>
+
+                                <a class="btn btn-link text-dark p-0 mb-0" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="top" title="Cancel" data-animation="true"><i class="fas fa-trash-alt text-dark me-2" aria-hidden="true"></i></a>
+
+
+                                {% else %}
                                 <a class="btn btn-link text-dark p-0 mb-0 confirm-reservation" href="{% url 'booking:confirm_reservation' res.id %}" data-reservation-id = "{{ res.id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Confirm" data-animation="true"><i class="fa fa-check-circle text-dark me-2" aria-hidden="true"></i>{{ res.id }}</a>
 
                                 <a class="btn btn-link text-dark p-0 mb-0" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" data-animation="true"><i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i></a>
 
                                 <a class="btn btn-link text-dark p-0 mb-0" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="top" title="Cancel" data-animation="true"><i class="fas fa-trash-alt text-dark me-2" aria-hidden="true"></i></a>
+
+
+                                {% endif%}
 
 
 

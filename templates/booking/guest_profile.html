@@ -84,16 +84,9 @@
                                 <span class="mb-2 text-xs">Check Out: <span class="text-dark ms-sm-2 font-weight-bold">{{ res.check_out }} ( {{ res.check_out|date:'l'}} )</span></span>
                                 <span class="mb-2 text-xs">Amount to pay: <span class="text-dark ms-sm-2 font-weight-bold">₱ {{ res.total_amount}} ( 2 nights )</span></span>
                                 <span class="mb-2 text-xs">Amount Deposited: <span class="text-dark ms-sm-2 font-weight-bold">₱ {{ res.amount_paid }} ( 50% )</span> - <a href="{{ res.images.url }}">view receipt</a></span>
-                                <span class="mb-2 text-xs">Status: <span class="badge badge-pill badge-md bg-gradient-warning">Pending</span></span>
+                                <span class="mb-2 text-xs">Status: <span class="badge badge-pill badge-md bg-gradient-warning">{{ res.status }}</span></span>
                               </div>
-                              <div class="ms-auto text-end">
-                                  <a class="btn btn-link text-dark p-0 mb-0" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="top" title="Confirm" data-animation="true"><i class="fa fa-check-circle text-dark me-2" aria-hidden="true"></i></a>
 
-                                  <a class="btn btn-link text-dark p-0 mb-0" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" data-animation="true"><i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i></a>
-
-                                  <a class="btn btn-link text-dark p-0 mb-0" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="top" title="Cancel" data-animation="true"><i class="fas fa-trash-alt text-dark me-2" aria-hidden="true"></i></a>
-
-                              </div>
                             </li>
                             {% endfor %}
                           {% else %}

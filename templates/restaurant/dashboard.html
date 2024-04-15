@@ -124,143 +124,35 @@
                           <thead>
                             <tr>
                               <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Product</th>
-                              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Value</th>
-                              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ads Spent</th>
-                              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Refunds</th>
+                              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Price</th>
+                              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Revenue</th>
                             </tr>
                           </thead>
                           <tbody>
+                            {% for item in top_selling_items %}
+
                             <tr>
                               <td>
                                 <div class="d-flex px-3 py-1">
                                   <div>
-                                    <img src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/soft-ui-design-system/assets/img/ecommerce/blue-shoe.jpg" class="avatar me-3" alt="image">
+                                    <img src="{{ item.menu_item.images.url }}" class="avatar me-3" alt="image">
                                   </div>
                                   <div class="d-flex flex-column justify-content-center">
-                                    <h6 class="mb-0 text-sm">Nike v22 Running</h6>
-                                    <p class="text-sm font-weight-bold text-secondary mb-0"><span class="text-success">8.232</span> orders</p>
+                                    <h6 class="mb-0 text-sm">{{ item.menu_item__name }}</h6>
+                                    <p class="text-sm font-weight-bold text-secondary mb-0"><span class="text-success">{{ item.total_quantity }}</span> orders</p>
                                   </div>
                                 </div>
                               </td>
                               <td>
-                                <p class="text-sm font-weight-bold mb-0">$130.992</p>
+                                <p class="text-sm font-weight-bold mb-0">₱{{ item.menu_item__price }}</p>
                               </td>
-                              <td class="align-middle text-center text-sm">
-                                <p class="text-sm font-weight-bold mb-0">$9.500</p>
+                              <td class="text-center">
+                                <p class="text-sm font-weight-bold mb-0">₱{{ item.revenue }}</p>
                               </td>
-                              <td class="align-middle text-end">
-                                <div class="d-flex px-3 py-1 justify-content-center align-items-center">
-                                  <p class="text-sm font-weight-bold mb-0">13</p>
-                                  <i class="ni ni-bold-down text-sm ms-1 mt-1 text-success"></i>
-                                  <button type="button" class="btn btn-sm btn-icon-only btn-rounded btn-outline-secondary mb-0 ms-2 btn-sm d-flex align-items-center justify-content-center ms-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Refund rate is lower with 97% than other products">
-                                  <i class="fas fa-info" aria-hidden="true"></i>
-                                  </button>
-                                </div>
-                              </td>
+
+
                             </tr>
-                            <tr>
-                              <td>
-                                <div class="d-flex px-3 py-1">
-                                  <div>
-                                    <img src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/soft-ui-design-system/assets/img/ecommerce/black-mug.jpg" class="avatar me-3" alt="image">
-                                  </div>
-                                  <div class="d-flex flex-column justify-content-center">
-                                    <h6 class="mb-0 text-sm">Business Kit (Mug + Notebook)</h6>
-                                    <p class="text-sm font-weight-bold text-secondary mb-0"><span class="text-success">12.821</span> orders</p>
-                                  </div>
-                                </div>
-                              </td>
-                              <td>
-                                <p class="text-sm font-weight-bold mb-0">$80.250</p>
-                              </td>
-                              <td class="align-middle text-center text-sm">
-                                <p class="text-sm font-weight-bold mb-0">$4.200</p>
-                              </td>
-                              <td class="align-middle text-end">
-                                <div class="d-flex px-3 py-1 justify-content-center align-items-center">
-                                  <p class="text-sm font-weight-bold mb-0">40</p>
-                                  <i class="ni ni-bold-down text-sm ms-1 mt-1 text-success"></i>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <div class="d-flex px-3 py-1">
-                                  <div>
-                                    <img src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/soft-ui-design-system/assets/img/ecommerce/black-chair.jpg" class="avatar me-3" alt="image">
-                                  </div>
-                                  <div class="d-flex flex-column justify-content-center">
-                                    <h6 class="mb-0 text-sm">Black Chair</h6>
-                                    <p class="text-sm font-weight-bold text-secondary mb-0"><span class="text-success">2.421</span> orders</p>
-                                  </div>
-                                </div>
-                              </td>
-                              <td>
-                                <p class="text-sm font-weight-bold mb-0">$40.600</p>
-                              </td>
-                              <td class="align-middle text-center text-sm">
-                                <p class="text-sm font-weight-bold mb-0">$9.430</p>
-                              </td>
-                              <td class="align-middle text-end">
-                                <div class="d-flex px-3 py-1 justify-content-center align-items-center">
-                                  <p class="text-sm font-weight-bold mb-0">54</p>
-                                  <i class="ni ni-bold-up text-sm ms-1 mt-1 text-danger"></i>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <div class="d-flex px-3 py-1">
-                                  <div>
-                                    <img src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/soft-ui-design-system/assets/img/ecommerce/bang-sound.jpg" class="avatar me-3" alt="image">
-                                  </div>
-                                  <div class="d-flex flex-column justify-content-center">
-                                    <h6 class="mb-0 text-sm">Wireless Charger</h6>
-                                    <p class="text-sm font-weight-bold text-secondary mb-0"><span class="text-success">5.921</span> orders</p>
-                                  </div>
-                                </div>
-                              </td>
-                              <td>
-                                <p class="text-sm font-weight-bold mb-0">$91.300</p>
-                              </td>
-                              <td class="align-middle text-center text-sm">
-                                <p class="text-sm font-weight-bold mb-0">$7.364</p>
-                              </td>
-                              <td class="align-middle text-end">
-                                <div class="d-flex px-3 py-1 justify-content-center align-items-center">
-                                  <p class="text-sm font-weight-bold mb-0">5</p>
-                                  <i class="ni ni-bold-down text-sm ms-1 mt-1 text-success"></i>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <div class="d-flex px-3 py-1">
-                                  <div>
-                                    <img src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/soft-ui-design-system/assets/img/ecommerce/photo-tools.jpg" class="avatar me-3" alt="image">
-                                  </div>
-                                  <div class="d-flex flex-column justify-content-center">
-                                    <h6 class="mb-0 text-sm">Mountain Trip Kit (Camera + Backpack)</h6>
-                                    <p class="text-sm font-weight-bold text-secondary mb-0"><span class="text-success">921</span> orders</p>
-                                  </div>
-                                </div>
-                              </td>
-                              <td>
-                                <p class="text-sm font-weight-bold mb-0">$140.925</p>
-                              </td>
-                              <td class="align-middle text-center text-sm">
-                                <p class="text-sm font-weight-bold mb-0">$20.531</p>
-                              </td>
-                              <td class="align-middle text-end">
-                                <div class="d-flex px-3 py-1 justify-content-center align-items-center">
-                                  <p class="text-sm font-weight-bold mb-0">121</p>
-                                  <i class="ni ni-bold-up text-sm ms-1 mt-1 text-danger"></i>
-                                  <button type="button" class="btn btn-sm btn-icon-only btn-rounded btn-outline-secondary mb-0 ms-2 btn-sm d-flex align-items-center justify-content-center ms-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Refund rate is higher with 70% than other products">
-                                  <i class="fas fa-info" aria-hidden="true"></i>
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
+                            {% endfor %}
                           </tbody>
                         </table>
                       </div>

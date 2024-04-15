@@ -11,6 +11,10 @@ from django.shortcuts import redirect, get_object_or_404
 import decimal
 from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
+from django.conf import settings
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 def room_types_list(request):
   """API endpoint to retrieve all room types."""
@@ -75,7 +79,7 @@ def get_guest_reservation(request, pk):
 
 
 
-def confirm_reservation(request, pk):
+def confirm_reservation2(request, pk):
   reservation = Reservation.objects.get(id = pk)
   room_type = reservation.room_type  # Assuming a room type is selected during reservation
 
@@ -111,6 +115,49 @@ def confirm_reservation(request, pk):
   message = "No available room found for the selected dates. Please try a different room type or dates."
   return redirect('booking:reservation')
 
+
+def confirm_reservation(request, pk):
+    reservation = Reservation.objects.get(id=pk)
+    room_type = reservation.room_type
+
+    available_rooms = Room.objects.filter(
+        room_type=room_type,
+        status='available',
+    ).annotate(
+        num_reservations=Count('reservedroom__reservation', filter=Q(reservedroom__reservation__status='confirmed'))
+    ).filter(num_reservations__lt=4)
+
+    for room in available_rooms:
+        overlapping_reservations = ReservedRoom.objects.filter(
+            room=room,
+            reservation__status='confirmed',
+            reservation__check_in__lte=reservation.check_in,
+            reservation__check_out__gte=reservation.check_out,
+        )
+        if not overlapping_reservations.exists():
+            reserved_room = ReservedRoom.objects.create(
+                reservation=reservation,
+                room=room,
+            )
+            reservation.status = 'confirmed'
+            reservation.room = room
+            reservation.save()
+
+            # Send confirmation email
+            subject = 'Reservation Confirmation'
+            context = {
+                'reservation': reservation,
+                'room': room,
+            }
+            html_message = render_to_string('booking/confirmation_email.html', context)
+            plain_message = strip_tags(html_message)
+            from_email = settings.EMAIL_HOST_USER  # Use the configured email address
+            to_email = [reservation.guest.email]
+            send_mail(subject, plain_message, from_email, to_email, html_message=html_message)
+
+            return redirect('booking:reservation')
+
+    return redirect('booking:reservation')
 
 def dashboard(request):
     return render(request, 'booking/index.html')
